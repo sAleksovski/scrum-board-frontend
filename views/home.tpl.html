@@ -1,0 +1,18 @@
+<h1>Login</h1>
+<div class="container" ng-show="!authenticated">
+    <div>
+        With Facebook: <a href="/auth/facebook">click here</a>
+    </div>
+    <div>
+        With Google: <a href="/auth/google">click here</a>
+    </div>
+    <div>
+        With Twitter: <a href="/auth/twitter">click here</a>
+    </div>
+</div>
+<div class="container" ng-show="authenticated">
+    Logged in as: <span ng-bind="user"></span>
+    <div>
+        <button ng-click="logout()" class="btn btn-primary">Logout</button>
+    </div>
+</div>

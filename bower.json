@@ -1,0 +1,28 @@
+{
+  "name": "scrum-board-frontend",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "angular": "~1.5.0",
+    "angular-cookies": "~1.5.0",
+    "angular-ui-router": "~0.2.17",
+    "angular-resource": "~1.5.0",
+    "angular-translate": "~2.9.0",
+    "angular-sanitize": "~1.5.0",
+    "components-font-awesome": "~4.5.0",
+    "momentjs": "~2.11.2",
+    "angular-toastr": "~1.7.0",
+    "ui-select": "*",
+    "angular-ui-select": "~0.14.2",
+    "angular-xeditable": "~0.1.9"
+  },
+  "resolutions": {
+    "angular": "~1.5.0"
+  }
+}
