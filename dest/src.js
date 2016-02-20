@@ -15,6 +15,11 @@
             url: '/',
             controller: 'HomeController',
             templateUrl: 'app/home.tpl.html'
+        })
+        .state('/b/:slug', {
+            url: '/b/:slug',
+            controller: 'BoardController',
+            templateUrl: 'app/board.tpl.html'
         });
 
         $urlRouterProvider.otherwise('/');
@@ -33,13 +38,14 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('AuthController', function($scope, AuthService) {
+    app.controller('AuthController', function($scope, $location, AuthService) {
         $scope.authenticated = false;
         
         AuthService.getUser().then(function(response) {
             $scope.authenticated = true;;
         }, function(response) {
             $scope.authenticated = false;
+            $location.path('/');
         });
     });
 })();
@@ -48,8 +54,21 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('HomeController', function($scope, $http, $location) {
+    app.controller('BoardController', function($scope, $http, $location, $stateParams, $resource) {
 
+    	$scope.slug = $stateParams.slug;
+
+        $http.get('/api/boards/' + $scope.slug).then(function(response) {
+            $scope.board = response.data;
+        });
+
+        // var Board = $resource('/api/boards/:slug', {
+        //     slug:'@slug'
+        // });
+
+        // var boards = Board.query(function() {
+        //     console.log(boards[0]);
+        // });
     });
 })();
 (function() {
@@ -57,25 +76,25 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.service('AuthService', AuthService);
-
-    function AuthService($http, $location) {
-        var service = {};
-
-        service.getUser = getUser;
-        service.logout = logout;
-
-        return service;
-
-        function getUser() {
-            return $http.get('/api/user');
+    app.controller('HomeController', function($scope, $http, $location) {
+        function init() {
+            $http.get('/api/boards').then(function(response) {
+                $scope.list = response.data;
+            });
         }
 
-        function logout() {
-            return $http.post('/auth/logout');
-        };
+        init();
 
-    };
+        $scope.data = {};
+
+        $scope.save = function() {
+            $http.post('/api/boards', $scope.data.name).then(function(response) {
+                console.log(response);
+                $scope.data.name = '';
+                init();
+            });
+        }
+    });
 })();
 (function() {
     'use strict';
@@ -128,4 +147,29 @@
       }
   }]);
 
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('AuthService', AuthService);
+
+    function AuthService($http, $location) {
+        var service = {};
+
+        service.getUser = getUser;
+        service.logout = logout;
+
+        return service;
+
+        function getUser() {
+            return $http.get('/api/user');
+        }
+
+        function logout() {
+            return $http.post('/auth/logout');
+        };
+
+    };
 })();

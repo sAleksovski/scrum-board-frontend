@@ -15,6 +15,11 @@
             url: '/',
             controller: 'HomeController',
             templateUrl: 'app/home.tpl.html'
+        })
+        .state('/b/:slug', {
+            url: '/b/:slug',
+            controller: 'BoardController',
+            templateUrl: 'app/board.tpl.html'
         });
 
         $urlRouterProvider.otherwise('/');
