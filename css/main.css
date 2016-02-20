@@ -1,0 +1,14 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.app-container {
+    height: 100%;
+}
+
+.img-navbar {
+    max-height: 22px;
+    margin: 0 5px;
+    display: inline-block;
+}

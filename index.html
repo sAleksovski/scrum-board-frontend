@@ -13,7 +13,7 @@
 
     <!-- Concatenated CSS -->
     <link href="/dest/lib.css?rev=0e296a95e82baff8e336e917ae4cfceb" rel="stylesheet">
-    <link href="/dest/app.css?rev=d41d8cd98f00b204e9800998ecf8427e" rel="stylesheet">
+    <link href="/dest/app.css?rev=3f7b3ce9c932eedfb1f7c857e0cfccad" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -24,16 +24,19 @@
 
 <body ng-app="scrum-board-frontend" ng-cloak class="ng-cloak">
 
-<navbar></navbar>
-<div class="container">
-    <div ui-view></div>
+<div class="app-container" ng-controller="AuthController">
+    <navbar ng-if="authenticated"></navbar>
+    <div class="container" ng-show="authenticated">
+        <div ui-view ng-if="authenticated"></div>
+    </div>
+    <landing-page ng-if="!authenticated"></landing-page>
 </div>
 
 <!-- Concatenated libraries -->
 <script src="/dest/lib.js?rev=ab4fc22b572966f40815de6cfcf70d9e"></script>
 <!-- Concatenated application -->
-<script src="/dest/src.js?rev=4008e945b7f962bd8754d1951d25923b"></script>
+<script src="/dest/src.js?rev=eac6a99e128fdf892e5825f2b12ba0b3"></script>
 <!-- All html templates -->
-<script src="/dest/templates.js?rev=626db577b74402f77ce7696d79ca46d2"></script>
+<script src="/dest/templates.js?rev=cf61bb8f8e0f29644fa299a6b238f0ee"></script>
 </body>
 </html>
