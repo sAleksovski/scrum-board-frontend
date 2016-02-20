@@ -127,7 +127,8 @@ gulp.task('templates', function () {
 gulp.task('cache-break', function () {
     return gulp.src(INDEX_FILE) // use the INDEX_FILE as source
         .pipe(rev())            // append the revision to all resources
-        .pipe(gulp.dest('.'));  // save the modified file at the same destination
+        .pipe(gulp.dest('.'))   // save the modified file at the same destination
+        .pipe(connect.reload());// reload
 });
 
 var tasks = [
