@@ -3,49 +3,47 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('BoardController', function($scope, $http, $location, $stateParams, $resource) {
+    app.controller('BoardController', function($scope, $http, $location, $stateParams, $uibModal) {
 
     	$scope.slug = $stateParams.slug;
         $scope.sprint = '';
 
         $http.get('/api/boards/' + $scope.slug).then(function(response) {
             $scope.board = response.data;
-            console.log($scope.board);
-            $scope.sprint = $scope.board.sprints[$scope.board.sprints.length - 1].id;
+            $scope.currentSprintId = $scope.board.sprints[$scope.board.sprints.length - 1].id;
             $scope.sprintChanged();
         });
 
         $scope.sprintChanged = function() {
-            console.log($scope.sprint);
-            $http.get('/api/boards/' + $scope.slug + '/sprints/' + $scope.sprint + '/tasks').then(function(response) {
+            $http.get('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprintId + '/tasks').then(function(response) {
                 $scope.tasks = response.data;
             });
         };
 
-        // var t = {
-        //     "fromDate": [
-        //       2016,
-        //       3,
-        //       25
-        //     ],
-        //     "toDate": [
-        //       2016,
-        //       3,
-        //       30
-        //     ]
-        //   };
+        $scope.openAddSprintModal = function () {
 
-        // $http.post('/api/boards/' + $scope.slug + '/sprints', t).then(function(response) {
-        //     console.log(response);
-        //     $scope.board = response.data;
-        // });
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/modal/sprint-add-modal.tpl.html',
+                controller: 'SprintAddModalController'
+            });
 
-        // var Board = $resource('/api/boards/:slug', {
-        //     slug:'@slug'
-        // });
+            modalInstance.result.then(function (dates) {
+                createSprint(dates.fromDate, dates.toDate);
+            }, function () {
+            });
+        };
 
-        // var boards = Board.query(function() {
-        //     console.log(boards[0]);
-        // });
+        function createSprint(fromDate, toDate) {
+            var sprint = {};
+            sprint.fromDate = [fromDate.getFullYear(), fromDate.getMonth() + 1, fromDate.getDate()];
+            sprint.toDate = [toDate.getFullYear(), toDate.getMonth() + 1, toDate.getDate()];
+            $http.post('/api/boards/' + $scope.slug + '/sprints', sprint).then(function(response) {
+                $scope.board.sprints.push(response.data);
+                $scope.currentSprintId = response.data.id;
+                $scope.sprintChanged();
+            });
+        }
+
     });
 })();

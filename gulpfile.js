@@ -11,7 +11,8 @@ var CSS_LIB = [
     'bower_components/angular-ui-select/dist/select.min.css',
     'bower_components/angular-xeditable/dist/css/xeditable.css',
     'bower_components/bootstrap/dist/css/bootstrap.min.css',
-    'bower_components/components-font-awesome/css/font-awesome.min.css'
+    'bower_components/components-font-awesome/css/font-awesome.min.css',
+    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css'
 ];
 
 var CSS_APP = [
@@ -35,10 +36,12 @@ var JS_LIB = [
     'bower_components/select2/select2.js',
     'bower_components/ui-select/src/select3.js',
     'bower_components/angular-ui-select/dist/select.min.js',
+    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
+    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
 ];
 
 var JS_APP = [
-    'app/**/*.js'
+    'app/**/**.js'
 ];
 
 

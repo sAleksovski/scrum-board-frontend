@@ -20,3 +20,8 @@ html, body {
 .mtop20 {
     margin-top: 20px;
 }
+
+.board-navbar {
+    background-color: #f8f8f8;
+    padding: 7px;
+}

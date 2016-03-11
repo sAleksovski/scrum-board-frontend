@@ -22,7 +22,7 @@
                 });
 
                 $scope.logout = function() {
-                  AuthService.logout().then(function(response) {
+                  AuthService.logout().then(function() {
                     $scope.authenticated = false;
                     $location.path('/');
                     location.reload(true);

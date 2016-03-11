@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h3 class="modal-title">Create new sprint!</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>From</h4>
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="fromDate"
+                       is-open="popupFrom.opened" datepicker-options="dateOptions" ng-required="true"
+                       close-text="Close"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openFrom()">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <h4>To</h4>
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="toDate"
+                       is-open="popupTo.opened" datepicker-options="dateOptions" ng-required="true"
+                       close-text="Close">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openTo()">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+        <div class="col-md-12">
+            <div ng-show="error" class="panel panel-danger">
+                <div class="panel-heading">{{ error }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>

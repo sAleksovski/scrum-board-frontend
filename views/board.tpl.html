@@ -1,13 +1,16 @@
-<div class="col-md-3 m0">
-	<select class="form-control" ng-model="sprint" ng-change="sprintChanged()">
-		<option ng-repeat="s in board.sprints"  ng-selected="s.id == sprint" value="{{s.id}}">{{s.fromDate}} - {{s.toDate}}</option>
-	</select>
+<div class="board-navbar">
+    <div class="col-md-3 m0">
+        <select class="form-control" ng-model="currentSprintId" ng-change="sprintChanged()">
+            <option ng-repeat="s in board.sprints" ng-selected="s.id == currentSprintId" value="{{s.id}}">{{s.fromDate}}
+                - {{s.toDate}}
+            </option>
+        </select>
+    </div>
+    <a class="btn btn-sm btn-info" href="" ng-click="openAddSprintModal()"><i class="glyphicon glyphicon-plus-sign"></i>
+        Add</a>
 </div>
-
 <div class="clearfix"></div>
 
-<div class="container">
 <pre>
-{{tasks | json}}
+{{ tasks }}
 </pre>
-</div>

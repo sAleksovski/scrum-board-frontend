@@ -3,6 +3,7 @@
 
     var app = angular.module('scrum-board-frontend', [
         'ui.router',
+        'ui.bootstrap',
         'ngResource',
         'pascalprecht.translate',
         'toastr',
