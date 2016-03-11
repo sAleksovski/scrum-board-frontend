@@ -3,10 +3,10 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('landingPage', ['$location', '$rootScope', function($location, $rootScope) {
+    app.directive('landingPage', function() {
         return {
             restrict: 'EA',
-            templateUrl: 'app/landing-page.tpl.html',
+            templateUrl: 'app/landing-page.tpl.html'
         }
-    }]);
+    });
 })();

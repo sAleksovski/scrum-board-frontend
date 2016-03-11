@@ -5,7 +5,7 @@
 
     app.service('AuthService', AuthService);
 
-    function AuthService($http, $location) {
+    function AuthService($http) {
         var service = {};
 
         service.getUser = getUser;
@@ -19,7 +19,7 @@
 
         function logout() {
             return $http.post('/auth/logout');
-        };
+        }
 
-    };
+    }
 })();

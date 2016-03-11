@@ -7,13 +7,13 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- <link rel="icon" href="/images/favicon.ico" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon"> -->
+     <link rel="icon" href="/images/favicon.png" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon">
 
     <title>Scrum Board</title>
 
     <!-- Concatenated CSS -->
     <link href="/dest/lib.css?rev=0e296a95e82baff8e336e917ae4cfceb" rel="stylesheet">
-    <link href="/dest/app.css?rev=3f7b3ce9c932eedfb1f7c857e0cfccad" rel="stylesheet">
+    <link href="/dest/app.css?rev=1a168c52720fa4ab9c4180b982954465" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -24,9 +24,9 @@
 
 <body ng-app="scrum-board-frontend" ng-cloak class="ng-cloak">
 
-<div class="app-container" ng-controller="AuthController">
+<div class="app-container" ng-controller="AuthController" ng-show="show">
     <navbar ng-if="authenticated"></navbar>
-    <div class="container" ng-show="authenticated">
+    <div ng-show="authenticated">
         <div ui-view ng-if="authenticated"></div>
     </div>
     <landing-page ng-if="!authenticated"></landing-page>
@@ -35,8 +35,8 @@
 <!-- Concatenated libraries -->
 <script src="/dest/lib.js?rev=ab4fc22b572966f40815de6cfcf70d9e"></script>
 <!-- Concatenated application -->
-<script src="/dest/src.js?rev=9390f8fdb6a255132a317d9c7b2b421f"></script>
+<script src="/dest/src.js?rev=bbb832f11a58c4e34cf8951d0a71ffa5"></script>
 <!-- All html templates -->
-<script src="/dest/templates.js?rev=17e545021aabee6c1d40e363d69b3199"></script>
+<script src="/dest/templates.js?rev=d64f7b0b0fd52d221519d05e5b58179e"></script>
 </body>
 </html>

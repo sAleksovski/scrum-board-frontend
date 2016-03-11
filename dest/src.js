@@ -40,12 +40,14 @@
 
     app.controller('AuthController', function($scope, $location, AuthService) {
         $scope.authenticated = false;
-        
-        AuthService.getUser().then(function(response) {
-            $scope.authenticated = true;;
-        }, function(response) {
+        $scope.show = false;
+        AuthService.getUser().then(function() {
+            $scope.authenticated = true;
+            $scope.show = true;
+        }, function() {
             $scope.authenticated = false;
             $location.path('/');
+            $scope.show = true;
         });
     });
 })();
@@ -57,10 +59,39 @@
     app.controller('BoardController', function($scope, $http, $location, $stateParams, $resource) {
 
     	$scope.slug = $stateParams.slug;
+        $scope.sprint = '';
 
         $http.get('/api/boards/' + $scope.slug).then(function(response) {
             $scope.board = response.data;
+            console.log($scope.board);
+            $scope.sprint = $scope.board.sprints[$scope.board.sprints.length - 1].id;
+            $scope.sprintChanged();
         });
+
+        $scope.sprintChanged = function() {
+            console.log($scope.sprint);
+            $http.get('/api/boards/' + $scope.slug + '/sprints/' + $scope.sprint + '/tasks').then(function(response) {
+                $scope.tasks = response.data;
+            });
+        };
+
+        // var t = {
+        //     "fromDate": [
+        //       2016,
+        //       3,
+        //       25
+        //     ],
+        //     "toDate": [
+        //       2016,
+        //       3,
+        //       30
+        //     ]
+        //   };
+
+        // $http.post('/api/boards/' + $scope.slug + '/sprints', t).then(function(response) {
+        //     console.log(response);
+        //     $scope.board = response.data;
+        // });
 
         // var Board = $resource('/api/boards/:slug', {
         //     slug:'@slug'
@@ -71,27 +102,47 @@
         // });
     });
 })();
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('HomeController', function($scope, $http, $location) {
+    app.controller('HomeController', function ($scope, $http) {
         function init() {
-            $http.get('/api/boards').then(function(response) {
-                $scope.list = response.data;
+            $http.get('/api/boards').then(function (response) {
+                $scope.boards = response.data;
             });
         }
 
         init();
 
+        $scope.showForm = false;
         $scope.data = {};
 
-        $scope.save = function() {
-            $http.post('/api/boards', $scope.data.name).then(function(response) {
-                console.log(response);
+        $scope.showAdd = function () {
+            $scope.showForm = true;
+        };
+
+        $scope.onBlur = function () {
+            $scope.showForm = false;
+            $scope.data.name = '';
+        };
+
+        $scope.keyDown = function (event) {
+            if (event.keyCode == 27) {
+                $scope.showForm = false;
                 $scope.data.name = '';
-                init();
+            }
+            if (event.keyCode == 13) {
+                $scope.showForm = false;
+                addBoard();
+            }
+        };
+
+        function addBoard() {
+            $http.post('/api/boards', $scope.data.name).then(function (response) {
+                $scope.boards.push(response.data);
+                $scope.data.name = '';
             });
         }
     });
@@ -101,12 +152,34 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('landingPage', ['$location', '$rootScope', function($location, $rootScope) {
+    app.directive('focus', ['$timeout', function($timeout) {
         return {
-            restrict: 'EA',
-            templateUrl: 'app/landing-page.tpl.html',
+            scope : {
+                trigger : '@focus'
+            },
+            link : function(scope, element) {
+                scope.$watch('trigger', function(value) {
+                    if (value === "true") {
+                        $timeout(function() {
+                            element[0].focus();
+                        });
+                    }
+                });
+            }
         }
     }]);
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('landingPage', function() {
+        return {
+            restrict: 'EA',
+            templateUrl: 'app/landing-page.tpl.html'
+        }
+    });
 })();
 (function() {
     'use strict';
@@ -155,7 +228,7 @@
 
     app.service('AuthService', AuthService);
 
-    function AuthService($http, $location) {
+    function AuthService($http) {
         var service = {};
 
         service.getUser = getUser;
@@ -169,7 +242,7 @@
 
         function logout() {
             return $http.post('/auth/logout');
-        };
+        }
 
-    };
+    }
 })();

@@ -12,3 +12,11 @@ html, body {
     margin: 0 5px;
     display: inline-block;
 }
+
+.m0 {
+    margin: 0 !important;
+}
+
+.mtop20 {
+    margin-top: 20px;
+}

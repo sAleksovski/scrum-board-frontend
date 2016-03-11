@@ -5,12 +5,14 @@
 
     app.controller('AuthController', function($scope, $location, AuthService) {
         $scope.authenticated = false;
-        
-        AuthService.getUser().then(function(response) {
-            $scope.authenticated = true;;
-        }, function(response) {
+        $scope.show = false;
+        AuthService.getUser().then(function() {
+            $scope.authenticated = true;
+            $scope.show = true;
+        }, function() {
             $scope.authenticated = false;
             $location.path('/');
+            $scope.show = true;
         });
     });
 })();
