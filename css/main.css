@@ -8,6 +8,18 @@ body {
     font: 14px "Helvetica Neue",Arial,Helvetica,sans-serif;
 }
 
+.navbar-scrum {
+    /*background-color: #009688;*/
+}
+
+.full-height {
+    height: 100%;
+}
+
+.height-minus-navbar {
+    height: calc(100% - 53px);
+}
+
 .app-container {
     height: 100%;
 }
@@ -28,7 +40,24 @@ body {
 
 .board-navbar {
     background-color: #f8f8f8;
-    padding: 7px;
+    padding: 4px;
+    height: 32px;
+    margin-bottom: 10px;
+}
+
+.board-sprint-select {
+    width: 270px;
+    display: inline-block;
+    height: 24px;
+    padding: 3px 6px;
+    font-size: 14px;
+    line-height: 1.42857143;
+}
+
+.board-sprint-btn-add {
+    height: 24px;
+    padding: 3px 6px;
+    margin-top: -4px;
 }
 
 /***************************** Required styles *****************************/
@@ -87,6 +116,10 @@ ul[dnd-list] {
 /**
  * Tasks
  */
+.board-container {
+    height: 100%;
+}
+
 .task-list-container {
     width: 100%;
     overflow-x: auto;
@@ -95,17 +128,31 @@ ul[dnd-list] {
     max-height: 100%;
 }
 
+.board-container .task-list-container {
+    height: calc(100% - 42px);
+}
+
 .task-list {
     background-color: #e2e4e6;
     border-radius: 3px;
     max-height: 100%;
-    padding: 0 9px 0 5px;
+    /*padding: 0 9px 0 5px;*/
     margin-right: 5px;
     margin-left: 10px;
+
+    height: 95%;
 
     width: 285px;
     display: inline-block;
     vertical-align: top;
+}
+
+.task-list ul {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+
+    margin: 0 2px 0 4px;
+    padding: 0 7px 0 5px;
 }
 
 .task-list-header {
@@ -149,4 +196,42 @@ ul[dnd-list] {
 .task-assigned-to {
     padding: 5px;
     height: 42px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent
+}
+
+::-webkit-scrollbar:hover {
+    background-color: rgba(0, 0, 0, .05)
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    background: rgba(0, 0, 0, .2);
+    border-radius: 100px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    min-height: 10px
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+    background: rgba(0, 0, 0, .3);
+    -webkit-border-radius: 100px
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background: rgba(0, 0, 0, .2);
+    border-radius: 100px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    min-width: 10px;
+    height: 2px !important;
+}
+
+::-webkit-scrollbar-thumb:horizontal:active {
+    background: rgba(0, 0, 0, .3);
+    -webkit-border-radius: 100px
 }

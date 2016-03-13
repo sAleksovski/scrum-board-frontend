@@ -1,16 +1,16 @@
-<div class="board-navbar">
-    <div class="col-md-3 m0">
-        <select class="form-control"
+<div class="board-container">
+    <div class="board-navbar">
+        <select class="form-control board-sprint-select"
                 ng-change="sprintChanged()"
                 ng-options="b.name for b in board.sprints track by b.id"
                 ng-model="currentSprint"></select>
+        <a class="btn btn-xs btn-info board-sprint-btn-add" href="" ng-click="openAddSprintModal()"><i
+                class="glyphicon glyphicon-plus-sign"></i>
+            Add</a>
     </div>
-    <a class="btn btn-sm btn-info" href="" ng-click="openAddSprintModal()"><i class="glyphicon glyphicon-plus-sign"></i>
-        Add</a>
-</div>
 
-<div class="clearfix mtop20"></div>
-
-<div class="task-list-container">
-    <task-list ng-repeat="(zone, list) in models.dropzones" slug="slug" sprint="currentSprint" zone="zone" tasks="list"></task-list>
+    <div class="task-list-container">
+        <task-list ng-repeat="(zone, list) in models.dropzones" slug="slug" sprint="currentSprint" zone="zone"
+                   tasks="list"></task-list>
+    </div>
 </div>

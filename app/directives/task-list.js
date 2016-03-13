@@ -15,6 +15,13 @@
             },
             link: function($scope) {
 
+                $scope.zones = [];
+                $scope.zones["TODO"] = "Todo";
+                $scope.zones["IN_PROGRESS"] = "In Progress";
+                $scope.zones["TESTING"] = "Testing";
+                $scope.zones["BLOCKED"] = "Blocked";
+                $scope.zones["DONE"] = "Done";
+
                 $scope.dropCallback = function(index, item, external, type, zone) {
                     item.taskProgress = zone;
 

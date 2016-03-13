@@ -13,7 +13,7 @@
 
     <!-- Concatenated CSS -->
     <link href="/dest/lib.css?rev=7b592eb39147fe70ddecd8ad1f8553dd" rel="stylesheet">
-    <link href="/dest/app.css?rev=5c32773ade590d5f3bad133d9a69762b" rel="stylesheet">
+    <link href="/dest/app.css?rev=7bb2ea823fdb2b2c7f15ac7f2cd5c8a0" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -26,8 +26,8 @@
 
 <div class="app-container" ng-controller="AuthController" ng-show="show">
     <navbar ng-if="authenticated"></navbar>
-    <div ng-show="authenticated">
-        <div ui-view ng-if="authenticated"></div>
+    <div ng-show="authenticated" class="height-minus-navbar">
+        <div ui-view ng-if="authenticated" class="full-height"></div>
     </div>
     <landing-page ng-if="!authenticated"></landing-page>
 </div>
@@ -35,8 +35,8 @@
 <!-- Concatenated libraries -->
 <script src="/dest/lib.js?rev=4e22cc6b406fe6a35378bca729ae255a"></script>
 <!-- Concatenated application -->
-<script src="/dest/src.js?rev=098719e3ce948bed6b1162efb56345f4"></script>
+<script src="/dest/src.js?rev=d7eb2383f10f72c828bf9d59222b8eca"></script>
 <!-- All html templates -->
-<script src="/dest/templates.js?rev=efc1f11b4354e5df5bee7ba62b3350fa"></script>
+<script src="/dest/templates.js?rev=2a3d8e2384405831747bbb2cab821af1"></script>
 </body>
 </html>
