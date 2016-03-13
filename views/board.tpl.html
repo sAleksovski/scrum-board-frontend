@@ -1,16 +1,46 @@
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
 <div class="board-navbar">
     <div class="col-md-3 m0">
-        <select class="form-control" ng-model="currentSprintId" ng-change="sprintChanged()">
-            <option ng-repeat="s in board.sprints" ng-selected="s.id == currentSprintId" value="{{s.id}}">{{s.fromDate}}
-                - {{s.toDate}}
-            </option>
-        </select>
+        <select class="form-control"
+                ng-change="sprintChanged()"
+                ng-options="b.name for b in board.sprints track by b.id"
+                ng-model="currentSprint"></select>
     </div>
     <a class="btn btn-sm btn-info" href="" ng-click="openAddSprintModal()"><i class="glyphicon glyphicon-plus-sign"></i>
         Add</a>
 </div>
+
 <div class="clearfix"></div>
 
-<pre>
-{{ tasks }}
-</pre>
+<div class="container">
+    <div class="row nestedDemo">
+        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-2">
+            <div class="dropzone box box-yellow">
+                <!-- The dropzone also uses the list template -->
+                <h3>{{zone}}</h3>
+                <div ng-include="'list.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="list.html">
+    <ul dnd-list="list"
+        dnd-drop="dropCallback(index, item, external, type, zone)">
+        <li ng-repeat="item in list"
+            dnd-draggable="item"
+            dnd-effect-allowed="move"
+            dnd-moved="list.splice($index, 1)"
+            dnd-selected="models.selected == item ? models.selected = null : models.selected = item"
+            ng-class="{selected: models.selected === item}"
+            ng-include="'item.html'">
+        </li>
+    </ul>
+</script>
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="item.html">
+    <div class="item">{{item.name}}</div>
+    <div class="description" ng-show="models.selected === item">{{item.description}}</div>
+</script>

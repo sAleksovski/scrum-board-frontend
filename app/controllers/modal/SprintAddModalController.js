@@ -5,18 +5,17 @@
 
     app.controller('SprintAddModalController', function ($scope, $uibModalInstance) {
 
+        $scope.sprint = {};
+
         $scope.ok = function () {
             $scope.error = '';
-            if (typeof $scope.fromDate === 'undefined' ||
-                typeof $scope.toDate === 'undefined') {
+            if (typeof $scope.sprint.name === 'undefined'
+                || typeof $scope.sprint.fromDate === 'undefined'
+                || typeof $scope.sprint.toDate === 'undefined') {
                 $scope.error = 'Both dates are required!';
                 return;
             }
-            var dates = {
-                fromDate: $scope.fromDate,
-                toDate: $scope.toDate
-            };
-            $uibModalInstance.close(dates);
+            $uibModalInstance.close($scope.sprint);
         };
 
         $scope.cancel = function () {

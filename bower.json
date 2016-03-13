@@ -20,7 +20,8 @@
     "angular-toastr": "~1.7.0",
     "ui-select": "*",
     "angular-ui-select": "~0.14.2",
-    "angular-xeditable": "~0.1.9"
+    "angular-xeditable": "~0.1.9",
+    "angular-drag-and-drop-lists": "~1.4.0"
   },
   "resolutions": {
     "angular": "~1.5.0"

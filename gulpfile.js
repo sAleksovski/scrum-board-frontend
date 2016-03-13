@@ -36,6 +36,7 @@ var JS_LIB = [
     'bower_components/select2/select2.js',
     'bower_components/ui-select/src/select3.js',
     'bower_components/angular-ui-select/dist/select.min.js',
+    'bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js',
     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
 ];

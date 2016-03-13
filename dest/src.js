@@ -4,6 +4,7 @@
     var app = angular.module('scrum-board-frontend', [
         'ui.router',
         'ui.bootstrap',
+        "dndLists",
         'ngResource',
         'pascalprecht.translate',
         'toastr',
@@ -60,17 +61,17 @@
     app.controller('BoardController', function($scope, $http, $location, $stateParams, $uibModal) {
 
     	$scope.slug = $stateParams.slug;
-        $scope.sprint = '';
 
         $http.get('/api/boards/' + $scope.slug).then(function(response) {
+            $scope.currentSprint = response.data.sprints[0];
             $scope.board = response.data;
-            $scope.currentSprintId = $scope.board.sprints[$scope.board.sprints.length - 1].id;
             $scope.sprintChanged();
         });
 
         $scope.sprintChanged = function() {
-            $http.get('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprintId + '/tasks').then(function(response) {
+            $http.get('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprint.id + '/tasks').then(function(response) {
                 $scope.tasks = response.data;
+                addTasksToModel();
             });
         };
 
@@ -82,22 +83,64 @@
                 controller: 'SprintAddModalController'
             });
 
-            modalInstance.result.then(function (dates) {
-                createSprint(dates.fromDate, dates.toDate);
+            modalInstance.result.then(function (sprint) {
+                createSprint(sprint);
             }, function () {
             });
         };
 
-        function createSprint(fromDate, toDate) {
-            var sprint = {};
-            sprint.fromDate = [fromDate.getFullYear(), fromDate.getMonth() + 1, fromDate.getDate()];
-            sprint.toDate = [toDate.getFullYear(), toDate.getMonth() + 1, toDate.getDate()];
+        function createSprint(sprint) {
+            sprint.fromDate = [sprint.fromDate.getFullYear(), sprint.fromDate.getMonth() + 1, sprint.fromDate.getDate()];
+            sprint.toDate = [sprint.toDate.getFullYear(), sprint.toDate.getMonth() + 1, sprint.toDate.getDate()];
             $http.post('/api/boards/' + $scope.slug + '/sprints', sprint).then(function(response) {
                 $scope.board.sprints.push(response.data);
-                $scope.currentSprintId = response.data.id;
+                $scope.currentSprint = response.data;
                 $scope.sprintChanged();
             });
         }
+
+        function addTasksToModel() {
+            $scope.models.dropzones = {
+                "TODO": [],
+                "IN_PROGRESS": [],
+                "TESTING": [],
+                "BLOCKED": [],
+                "DONE": []
+            };
+            $scope.tasks.forEach(function(task) {
+                $scope.models.dropzones[task.taskProgress].push(task);
+            })
+        }
+
+        // TODO,
+        // IN_PROGRESS,
+        // TESTING,
+        // BLOCKED,
+        // DONE
+
+        $scope.models = {
+            selected: null,
+            dropzones: {
+                "TODO": [],
+                "IN_PROGRESS": [],
+                "TESTING": [],
+                "BLOCKED": [],
+                "DONE": []
+            }
+        };
+
+        $scope.dropCallback = function(index, item, external, type, zone) {
+            item.taskProgress = zone;
+
+            $http.put('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprintId + '/tasks/' + item.id, item).then(function(response) {
+                console.log(response);
+            }, function (response) {
+                console.log('error');
+                console.log(response);
+            });
+
+            return item;
+        };
 
     });
 })();
@@ -252,18 +295,17 @@
 
     app.controller('SprintAddModalController', function ($scope, $uibModalInstance) {
 
+        $scope.sprint = {};
+
         $scope.ok = function () {
             $scope.error = '';
-            if (typeof $scope.fromDate === 'undefined' ||
-                typeof $scope.toDate === 'undefined') {
+            if (typeof $scope.sprint.name === 'undefined'
+                || typeof $scope.sprint.fromDate === 'undefined'
+                || typeof $scope.sprint.toDate === 'undefined') {
                 $scope.error = 'Both dates are required!';
                 return;
             }
-            var dates = {
-                fromDate: $scope.fromDate,
-                toDate: $scope.toDate
-            };
-            $uibModalInstance.close(dates);
+            $uibModalInstance.close($scope.sprint);
         };
 
         $scope.cancel = function () {
