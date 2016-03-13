@@ -57,12 +57,6 @@
             })
         }
 
-        // TODO,
-        // IN_PROGRESS,
-        // TESTING,
-        // BLOCKED,
-        // DONE
-
         $scope.models = {
             selected: null,
             dropzones: {
@@ -72,19 +66,6 @@
                 "BLOCKED": [],
                 "DONE": []
             }
-        };
-
-        $scope.dropCallback = function(index, item, external, type, zone) {
-            item.taskProgress = zone;
-
-            $http.put('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprintId + '/tasks/' + item.id, item).then(function(response) {
-                console.log(response);
-            }, function (response) {
-                console.log('error');
-                console.log(response);
-            });
-
-            return item;
         };
 
     });

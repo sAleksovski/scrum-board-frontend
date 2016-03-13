@@ -22,19 +22,19 @@
                 });
 
                 $scope.logout = function() {
-                  AuthService.logout().then(function() {
-                    $scope.authenticated = false;
-                    $location.path('/');
-                    location.reload(true);
-                }, function(response) {
-                    console.log(response);
-                    $scope.authenticated = false;
-                    $location.path('/');
-                    location.reload(true);
-                })
-              };
-          }
-      }
-  }]);
+                    AuthService.logout().then(function() {
+                        $scope.authenticated = false;
+                        $location.path('/');
+                        location.reload(true);
+                    }, function(response) {
+                        console.log(response);
+                        $scope.authenticated = false;
+                        $location.path('/');
+                        location.reload(true);
+                    });
+                };
+            }
+        }
+    }]);
 
 })();

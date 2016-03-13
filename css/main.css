@@ -3,6 +3,11 @@ html, body {
     margin: 0;
 }
 
+body {
+    color: #4d4d4d;
+    font: 14px "Helvetica Neue",Arial,Helvetica,sans-serif;
+}
+
 .app-container {
     height: 100%;
 }
@@ -32,8 +37,8 @@ html, body {
  * For the correct positioning of the placeholder element, the dnd-list and
  * it's children must have position: relative
  */
-.nestedDemo ul[dnd-list],
-.nestedDemo ul[dnd-list] > li {
+ul[dnd-list],
+ul[dnd-list] > li {
     position: relative;
 }
 
@@ -43,24 +48,11 @@ html, body {
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
  */
-.nestedDemo .dropzone ul[dnd-list] {
+ul[dnd-list] {
     min-height: 42px;
-    margin: 0px;
-    padding-left: 0px;
-}
-
-/**
- * The dnd-lists's child elements currently MUST have
- * position: relative. Otherwise we can not determine
- * whether the mouse pointer is in the upper or lower
- * half of the element we are dragging over. In other
- * browsers we can use event.offsetY for this.
- */
-.nestedDemo .dropzone li {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    display: block;
-    padding: 0px;
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
 }
 
 /**
@@ -68,7 +60,7 @@ html, body {
  * to see where he is dropping his element, even if the element is huge. The
  * .dndDragging class is automatically set during the drag operation.
  */
-.nestedDemo .dropzone .dndDragging {
+.dndDragging {
     opacity: 0.7;
 }
 
@@ -77,7 +69,7 @@ html, body {
  * operation. It makes sense to hide it to give the user the feeling that he's
  * actually moving it. Note that the source element has also .dndDragging class.
  */
-.nestedDemo .dropzone .dndDraggingSource {
+.dndDraggingSource {
     display: none;
 }
 
@@ -85,89 +77,76 @@ html, body {
  * An element with .dndPlaceholder class will be added as child of the dnd-list
  * while the user is dragging over it.
  */
-.nestedDemo .dropzone .dndPlaceholder {
+.dndPlaceholder {
     background-color: #ddd;
     min-height: 42px;
     display: block;
     position: relative;
 }
 
-/***************************** Element Selection *****************************/
-
-.nestedDemo .dropzone .selected .item {
-    color: #3c763d;
-    background-color: #dff0d8;
+/**
+ * Tasks
+ */
+.task-list-container {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 100%;
+    max-height: 100%;
 }
 
-.nestedDemo .dropzone .selected .box {
-    border-color: #d6e9c6;
+.task-list {
+    background-color: #e2e4e6;
+    border-radius: 3px;
+    max-height: 100%;
+    padding: 0 9px 0 5px;
+    margin-right: 5px;
+    margin-left: 10px;
+
+    width: 285px;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.nestedDemo .dropzone .selected .box > h3 {
-    color: #3c763d;
-    background-color: #dff0d8;
-    background-image: linear-gradient(to bottom,#dff0d8 0,#d0e9c6 100%);
-    border-color: #d6e9c6;
+.task-list-header {
+    display: block;
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0;
+    min-height: 19px;
+    min-width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    padding: 8px 10px;
 }
 
-/***************************** Element type specific styles *****************************/
+.task-list-header h2 {
+    display: inline;
+    font-size: 15px;
+    line-height: 18px;
+    margin: 0;
+    min-height: 19px;
+    min-width: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
 
-.nestedDemo .dropzone .item {
+.task {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.task-name {
     padding: 10px 15px;
 }
 
-.nestedDemo .dropzone .container-element {
-    margin: 10px;
-}
-
-.nestedDemo .dropzone .container-element .column {
-    float: left;
-    width: 50%;
-}
-
-/***************************** Toolbox *****************************/
-
-.nestedDemo .toolbox ul {
-    list-style: none;
-    padding-left: 0px;
-    cursor: move;
-}
-
-.nestedDemo .toolbox button {
-    margin: 5px;
-    width: 123px;
-    opacity: 1.0;
-}
-
-.nestedDemo .toolbox .dndDragging {
-    opacity: 0.5;
-}
-
-.nestedDemo .toolbox .dndDraggingSource {
-    opacity: 1.0;
-}
-
-/***************************** Trashcan *****************************/
-
-.nestedDemo .trashcan ul {
-    list-style: none;
-    padding-left: 0px;
-}
-
-.nestedDemo .trashcan img {
-    width: 100%;
-    -webkit-filter: grayscale(100%);
-    -moz-filter: grayscale(100%);
-    filter: grayscale(100%);
-}
-
-.nestedDemo .trashcan .dndDragover img {
-    width: 100%;
-    -webkit-filter: none;
-    -moz-filter: none;
-    filter: none;
-}
-
-.nestedDemo .trashcan .dndPlaceholder {
-    display: none;
+.task-assigned-to {
+    padding: 5px;
+    height: 42px;
 }

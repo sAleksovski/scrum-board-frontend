@@ -112,12 +112,6 @@
             })
         }
 
-        // TODO,
-        // IN_PROGRESS,
-        // TESTING,
-        // BLOCKED,
-        // DONE
-
         $scope.models = {
             selected: null,
             dropzones: {
@@ -127,19 +121,6 @@
                 "BLOCKED": [],
                 "DONE": []
             }
-        };
-
-        $scope.dropCallback = function(index, item, external, type, zone) {
-            item.taskProgress = zone;
-
-            $http.put('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprintId + '/tasks/' + item.id, item).then(function(response) {
-                console.log(response);
-            }, function (response) {
-                console.log('error');
-                console.log(response);
-            });
-
-            return item;
         };
 
     });
@@ -247,20 +228,73 @@
                 });
 
                 $scope.logout = function() {
-                  AuthService.logout().then(function() {
-                    $scope.authenticated = false;
-                    $location.path('/');
-                    location.reload(true);
-                }, function(response) {
-                    console.log(response);
-                    $scope.authenticated = false;
-                    $location.path('/');
-                    location.reload(true);
-                })
-              };
-          }
-      }
-  }]);
+                    AuthService.logout().then(function() {
+                        $scope.authenticated = false;
+                        $location.path('/');
+                        location.reload(true);
+                    }, function(response) {
+                        console.log(response);
+                        $scope.authenticated = false;
+                        $location.path('/');
+                        location.reload(true);
+                    });
+                };
+            }
+        }
+    }]);
+
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('taskList', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/task-list.tpl.html',
+            scope: {
+                list: '=tasks',
+                slug: '=slug',
+                sprint: '=sprint',
+                zone: '=zone'
+            },
+            link: function($scope) {
+
+                $scope.dropCallback = function(index, item, external, type, zone) {
+                    item.taskProgress = zone;
+
+                    $http.put('/api/boards/' + $scope.slug + '/sprints/' + $scope.sprint.id + '/tasks/' + item.id, item).then(function(response) {
+                        console.log(response);
+                    }, function (response) {
+                        console.log('error');
+                        console.log(response);
+                    });
+
+                    return item;
+                };
+            }
+        }
+    }]);
+
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('task', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/task.tpl.html',
+            scope: {
+                task: '=task',
+                selected: '=selected'
+            },
+            link: function($scope) {
+            }
+        }
+    }]);
 
 })();
 (function() {
