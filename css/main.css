@@ -194,6 +194,7 @@ ul[dnd-list] {
 }
 
 .task-assigned-to {
+    float: right;
     padding: 5px;
     height: 42px;
 }

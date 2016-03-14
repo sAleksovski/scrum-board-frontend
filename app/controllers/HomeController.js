@@ -3,9 +3,10 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('HomeController', function ($scope, $http) {
+    app.controller('HomeController', function ($scope, BoardService) {
+
         function init() {
-            $http.get('/api/boards').then(function (response) {
+            BoardService.getBoards().then(function (response) {
                 $scope.boards = response.data;
             });
         }
@@ -36,7 +37,7 @@
         };
 
         function addBoard() {
-            $http.post('/api/boards', $scope.data.name).then(function (response) {
+            BoardService.addBoard($scope.data.name).then(function (response) {
                 $scope.boards.push(response.data);
                 $scope.data.name = '';
             });

@@ -6,6 +6,7 @@
         'ui.bootstrap',
         "dndLists",
         'ngResource',
+        'ngCookies',
         'pascalprecht.translate',
         'toastr',
         'ui.select',

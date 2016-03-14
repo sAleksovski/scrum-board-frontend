@@ -6,6 +6,7 @@
         'ui.bootstrap',
         "dndLists",
         'ngResource',
+        'ngCookies',
         'pascalprecht.translate',
         'toastr',
         'ui.select',
@@ -53,30 +54,49 @@
         });
     });
 })();
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('BoardController', function($scope, $http, $location, $stateParams, $uibModal) {
+    app.controller('BoardController', function ($scope, $stateParams, $cookies, $uibModal, BoardService, SprintService, TaskService) {
 
-    	$scope.slug = $stateParams.slug;
+        $scope.slug = $stateParams.slug;
 
-        $http.get('/api/boards/' + $scope.slug).then(function(response) {
-            $scope.currentSprint = response.data.sprints[0];
-            $scope.board = response.data;
-            $scope.sprintChanged();
-        });
+        $scope.sprintChanged = sprintChanged;
+        $scope.openAddSprintModal = openAddSprintModal;
 
-        $scope.sprintChanged = function() {
-            $http.get('/api/boards/' + $scope.slug + '/sprints/' + $scope.currentSprint.id + '/tasks').then(function(response) {
-                $scope.tasks = response.data;
-                addTasksToModel();
-            });
+        $scope.tasks = {
+            "TODO": [],
+            "IN_PROGRESS": [],
+            "TESTING": [],
+            "BLOCKED": [],
+            "DONE": []
         };
 
-        $scope.openAddSprintModal = function () {
+        BoardService.getBoard($scope.slug).then(function (response) {
+            var currentSprintId = getSelectedSprint();
+            if (currentSprintId != -1) {
+                response.data.sprints.forEach(function (sprint) {
+                    if (sprint.id === currentSprintId) {
+                        $scope.currentSprint = sprint;
+                    }
+                });
+            } else if (response.data.sprints.length > 0) {
+                $scope.currentSprint = response.data.sprints[0];
+            }
+            $scope.board = response.data;
+            $scope.currentSprint && $scope.sprintChanged();
+        });
 
+        function sprintChanged() {
+            saveSelectedSprint();
+            TaskService.getTasks($scope.slug, $scope.currentSprint.id).then(function (response) {
+                addTasksToModel(response.data);
+            });
+        }
+
+        function openAddSprintModal() {
             var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'app/modal/sprint-add-modal.tpl.html',
@@ -87,41 +107,45 @@
                 createSprint(sprint);
             }, function () {
             });
-        };
+        }
 
         function createSprint(sprint) {
-            sprint.fromDate = [sprint.fromDate.getFullYear(), sprint.fromDate.getMonth() + 1, sprint.fromDate.getDate()];
-            sprint.toDate = [sprint.toDate.getFullYear(), sprint.toDate.getMonth() + 1, sprint.toDate.getDate()];
-            $http.post('/api/boards/' + $scope.slug + '/sprints', sprint).then(function(response) {
+            SprintService.addSprint($scope.slug, sprint).then(function (response) {
                 $scope.board.sprints.push(response.data);
                 $scope.currentSprint = response.data;
                 $scope.sprintChanged();
             });
         }
 
-        function addTasksToModel() {
-            $scope.models.dropzones = {
+        function addTasksToModel(tasks) {
+            $scope.tasks = {
                 "TODO": [],
                 "IN_PROGRESS": [],
                 "TESTING": [],
                 "BLOCKED": [],
                 "DONE": []
             };
-            $scope.tasks.forEach(function(task) {
-                $scope.models.dropzones[task.taskProgress].push(task);
+            tasks.forEach(function (task) {
+                $scope.tasks[task.taskProgress].push(task);
             })
         }
 
-        $scope.models = {
-            selected: null,
-            dropzones: {
-                "TODO": [],
-                "IN_PROGRESS": [],
-                "TESTING": [],
-                "BLOCKED": [],
-                "DONE": []
+        function getSelectedSprint() {
+            var boardToSprint = $cookies.get('bts') || '{}';
+            boardToSprint = JSON.parse(boardToSprint);
+            if (boardToSprint[$scope.slug]) {
+                return boardToSprint[$scope.slug];
             }
-        };
+            return -1;
+        }
+
+        function saveSelectedSprint() {
+            var boardToSprint = $cookies.get('bts') || '{}';
+            boardToSprint = JSON.parse(boardToSprint);
+            boardToSprint[$scope.slug] = $scope.currentSprint.id;
+            boardToSprint = JSON.stringify(boardToSprint);
+            $cookies.put('bts', boardToSprint);
+        }
 
     });
 })();
@@ -130,9 +154,10 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('HomeController', function ($scope, $http) {
+    app.controller('HomeController', function ($scope, BoardService) {
+
         function init() {
-            $http.get('/api/boards').then(function (response) {
+            BoardService.getBoards().then(function (response) {
                 $scope.boards = response.data;
             });
         }
@@ -163,7 +188,7 @@
         };
 
         function addBoard() {
-            $http.post('/api/boards', $scope.data.name).then(function (response) {
+            BoardService.addBoard($scope.data.name).then(function (response) {
                 $scope.boards.push(response.data);
                 $scope.data.name = '';
             });
@@ -249,7 +274,7 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('taskList', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+    app.directive('taskList', ['$location', '$rootScope', '$http', 'TaskService', function($location, $rootScope, $http, TaskService) {
         return {
             restrict: 'E',
             templateUrl: 'app/task-list.tpl.html',
@@ -271,11 +296,8 @@
                 $scope.dropCallback = function(index, item, external, type, zone) {
                     item.taskProgress = zone;
 
-                    $http.put('/api/boards/' + $scope.slug + '/sprints/' + $scope.sprint.id + '/tasks/' + item.id, item).then(function(response) {
-                        console.log(response);
+                    TaskService.updateTask($scope.slug, $scope.sprint.id, item).then(function(response) {
                     }, function (response) {
-                        console.log('error');
-                        console.log(response);
                     });
 
                     return item;
@@ -325,6 +347,83 @@
 
         function logout() {
             return $http.post('/auth/logout');
+        }
+
+    }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('BoardService', BoardService);
+
+    function BoardService($http) {
+        var service = {};
+
+        service.getBoards = getBoards;
+        service.getBoard = getBoard;
+        service.addBoard = addBoard;
+
+        return service;
+
+        function getBoards() {
+            return $http.get('/api/boards');
+        }
+
+        function getBoard(slug) {
+            return $http.get('/api/boards/' + slug);
+        }
+
+        function addBoard(name) {
+            return $http.post('/api/boards', name);
+        }
+
+    }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('SprintService', SprintService);
+
+    function SprintService($http) {
+        var service = {};
+
+        service.addSprint = addSprint;
+
+        return service;
+
+        function addSprint(slug, sprint) {
+            sprint.fromDate = [sprint.fromDate.getFullYear(), sprint.fromDate.getMonth() + 1, sprint.fromDate.getDate()];
+            sprint.toDate = [sprint.toDate.getFullYear(), sprint.toDate.getMonth() + 1, sprint.toDate.getDate()];
+            return $http.post('/api/boards/' + slug + '/sprints', sprint);
+        }
+
+    }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('TaskService', TaskService);
+
+    function TaskService($http) {
+        var service = {};
+
+        service.getTasks = getTasks;
+        service.updateTask = updateTask;
+
+        return service;
+
+        function getTasks(slug, sprintId) {
+            return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks')
+        }
+
+        function updateTask(slug, sprintId, task) {
+            return $http.put('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + task.id, task);
         }
 
     }

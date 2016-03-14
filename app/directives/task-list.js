@@ -3,7 +3,7 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('taskList', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+    app.directive('taskList', ['$location', '$rootScope', '$http', 'TaskService', function($location, $rootScope, $http, TaskService) {
         return {
             restrict: 'E',
             templateUrl: 'app/task-list.tpl.html',
@@ -25,11 +25,8 @@
                 $scope.dropCallback = function(index, item, external, type, zone) {
                     item.taskProgress = zone;
 
-                    $http.put('/api/boards/' + $scope.slug + '/sprints/' + $scope.sprint.id + '/tasks/' + item.id, item).then(function(response) {
-                        console.log(response);
+                    TaskService.updateTask($scope.slug, $scope.sprint.id, item).then(function(response) {
                     }, function (response) {
-                        console.log('error');
-                        console.log(response);
                     });
 
                     return item;

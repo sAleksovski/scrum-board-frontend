@@ -1,8 +1,9 @@
 <div class="task">
     <div class="task-name">{{task.name}}</div>
-    <div class="text-right">
-        <img class="task-assigned-to" ng-src="{{task.assignedTo.imageUrl}}" />
-    </div>
+    <div class="pull-left">taskDificulty</div>
+    <div class="pull-left">nComments</div>
+    <img class="task-assigned-to" ng-src="{{task.assignedTo.imageUrl}}" />
+    <div class="clearfix"></div>
 
     <div class="description" ng-show="selected">{{task.description}}</div>
 </div>
