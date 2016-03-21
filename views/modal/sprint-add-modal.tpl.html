@@ -1,51 +1,44 @@
-<div class="modal-header">
-    <h3 class="modal-title">Create new sprint!</h3>
-</div>
-<div class="modal-body">
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Name</h4>
-            <input type="text" class="form-control" title="Name" ng-model="sprint.name" />
-            <p class="input-group">
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <h4>From</h4>
-            <p class="input-group">
-                <input type="text" class="form-control" uib-datepicker-popup ng-model="sprint.fromDate"
-                       is-open="popupFrom.opened" datepicker-options="dateOptions" ng-required="true"
-                       close-text="Close"/>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="openFrom()">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                    </button>
-                </span>
-            </p>
-        </div>
-
-        <div class="col-md-6">
-            <h4>To</h4>
-            <p class="input-group">
-                <input type="text" class="form-control" uib-datepicker-popup ng-model="sprint.toDate"
-                       is-open="popupTo.opened" datepicker-options="dateOptions" ng-required="true"
-                       close-text="Close">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="openTo()">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                    </button>
-                </span>
-            </p>
-        </div>
-
-        <div class="col-md-12">
-            <div ng-show="error" class="panel panel-danger">
-                <div class="panel-heading">{{ error }}</div>
+<md-dialog ng-cloak>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create new Sprint</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon>close</md-icon>
+                </md-button>
             </div>
-        </div>
-    </div>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-</div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div style="min-width: 500px;"></div>
+                <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-xs>
+                        <label>Sprint</label>
+                        <input ng-model="sprint.name">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-margin>
+                    <md-datepicker flex ng-model="sprint.fromDate"
+                                   md-placeholder="Enter from date">
+                    </md-datepicker>
+                    <md-datepicker flex ng-model="sprint.toDate"
+                                   md-placeholder="Enter to date">
+                    </md-datepicker>
+                </div>
+                <div layout="row" layout-align="center center" ng-show="error">
+                    <div class="form-error">{{ error }}</div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="answer()">
+                Save
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

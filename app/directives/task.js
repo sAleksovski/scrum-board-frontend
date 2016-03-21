@@ -8,10 +8,10 @@
             restrict: 'E',
             templateUrl: 'app/task.tpl.html',
             scope: {
-                task: '=task',
-                selected: '=selected'
+                task: '=task'
             },
             link: function($scope) {
+                $scope.selected = false;
             }
         }
     }]);

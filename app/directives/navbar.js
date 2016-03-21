@@ -21,6 +21,10 @@
                     $scope.user.profilePicture = response.data.imageUrl;
                 });
 
+                $scope.openMenu = function($mdOpenMenu, ev) {
+                    $mdOpenMenu(ev);
+                };
+
                 $scope.logout = function() {
                     AuthService.logout().then(function() {
                         $scope.authenticated = false;

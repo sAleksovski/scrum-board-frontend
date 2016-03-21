@@ -1,16 +1,15 @@
-<div class="task-list">
-    <div class="task-list-header">
-        <h2>{{zones[zone]}}</h2>
-    </div>
-    <ul dnd-list="list"
-        dnd-drop="dropCallback(index, item, external, type, zone)">
-        <li ng-repeat="item in list"
-            dnd-draggable="item"
-            dnd-effect-allowed="move"
-            dnd-moved="list.splice($index, 1)"
-            dnd-selected="selected === item ? selected = null : selected = item"
-            ng-class="{selected: selected === item}">
-            <task task="item" selected="selected === item"></task>
-        </li>
-    </ul>
-</div>
+<md-content class="task-list">
+    <md-list flex style="padding: 0;">
+        <md-subheader class="md-no-sticky">{{zones[zone]}}</md-subheader>
+        <ul dnd-list="list"
+            dnd-drop="dropCallback(index, item, external, type, zone)">
+            <li ng-repeat="item in list"
+                dnd-draggable="item"
+                dnd-effect-allowed="move"
+                dnd-moved="list.splice($index, 1)"
+                ng-class="{selected: selected === item}">
+                <task task="item"></task>
+            </li>
+        </ul>
+    </md-list>
+</md-content>

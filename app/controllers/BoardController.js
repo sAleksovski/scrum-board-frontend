@@ -3,12 +3,14 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('BoardController', function ($scope, $stateParams, $cookies, $uibModal, BoardService, SprintService, TaskService) {
+    app.controller('BoardController', function ($scope, $stateParams, $cookies, $mdDialog, $mdMedia, BoardService, SprintService, TaskService) {
 
         $scope.slug = $stateParams.slug;
 
         $scope.sprintChanged = sprintChanged;
         $scope.openAddSprintModal = openAddSprintModal;
+
+        $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
         $scope.tasks = {
             "TODO": [],
@@ -34,22 +36,31 @@
         });
 
         function sprintChanged() {
+            console.log($scope.currentSprint);
             saveSelectedSprint();
             TaskService.getTasks($scope.slug, $scope.currentSprint.id).then(function (response) {
                 addTasksToModel(response.data);
             });
         }
 
-        function openAddSprintModal() {
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'app/modal/sprint-add-modal.tpl.html',
-                controller: 'SprintAddModalController'
-            });
-
-            modalInstance.result.then(function (sprint) {
-                createSprint(sprint);
-            }, function () {
+        function openAddSprintModal(ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+            $mdDialog.show({
+                    controller: 'SprintAddModalController',
+                    templateUrl: 'app/modal/sprint-add-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen
+                })
+                .then(function (sprint) {
+                    createSprint(sprint);
+                }, function () {
+                });
+            $scope.$watch(function () {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function (wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
             });
         }
 

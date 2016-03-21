@@ -1,9 +1,11 @@
-<div class="task">
-    <div class="task-name">{{task.name}}</div>
-    <div class="pull-left">taskDificulty</div>
-    <div class="pull-left">nComments</div>
-    <img class="task-assigned-to" ng-src="{{task.assignedTo.imageUrl}}" />
-    <div class="clearfix"></div>
-
-    <div class="description" ng-show="selected">{{task.description}}</div>
-</div>
+<md-card ng-click="selected = !selected">
+    <md-card-header>
+        <md-card-avatar>
+            <img class="md-user-avatar" ng-src="{{task.assignedTo.imageUrl}}"/>
+        </md-card-avatar>
+        <md-card-header-text>
+            <span class="md-title">{{task.name}}</span>
+            <span class="md-subhead" ng-show="selected">{{task.description}}</span>
+        </md-card-header-text>
+    </md-card-header>
+</md-card>

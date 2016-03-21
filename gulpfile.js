@@ -7,38 +7,42 @@ var fs = require("fs");
 
 
 var CSS_LIB = [
-    'bower_components/angular-toastr/dist/angular-toastr.min.css',
-    'bower_components/angular-ui-select/dist/select.min.css',
+    // 'bower_components/angular-toastr/dist/angular-toastr.min.css',
+    // 'bower_components/angular-ui-select/dist/select.min.css',
     'bower_components/angular-xeditable/dist/css/xeditable.css',
-    'bower_components/bootstrap/dist/css/bootstrap.min.css',
-    'bower_components/components-font-awesome/css/font-awesome.min.css',
-    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css'
+    // 'bower_components/bootstrap/dist/css/bootstrap.min.css',
+    // 'bower_components/components-font-awesome/css/font-awesome.min.css',
+    // 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css',
+    'bower_components/angular-material/angular-material.css'
 ];
 
 var CSS_APP = [
     'css/main.css'
 ];
 
+// 'bower_components/jquery/dist/jquery.min.js',
+// 'bower_components/angular-toastr/dist/angular-toastr.min.js',
+// 'bower_components/angular-toastr/dist/angular-toastr.tpls.min.js',
+// 'bower_components/bootstrap/dist/js/bootstrap.min.js',
+// 'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+// 'bower_components/select2/select2.js',
+// 'bower_components/ui-select/src/select3.js',
+// 'bower_components/angular-ui-select/dist/select.min.js',
+// 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
+// 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
 var JS_LIB = [
-    'bower_components/jquery/dist/jquery.min.js',
     'bower_components/angular/angular.js',
     'bower_components/angular-cookies/angular-cookies.js',
     'bower_components/angular-resource/angular-resource.min.js',
     'bower_components/angular-sanitize/angular-sanitize.min.js',
-    'bower_components/angular-toastr/dist/angular-toastr.min.js',
-    'bower_components/angular-toastr/dist/angular-toastr.tpls.min.js',
     'bower_components/angular-translate/angular-translate.min.js',
     'bower_components/angular-ui-router/release/angular-ui-router.min.js',
     'bower_components/angular-xeditable/dist/js/xeditable.min.js',
-    'bower_components/bootstrap/dist/js/bootstrap.min.js',
     'bower_components/momentjs/moment.js',
-    // 'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
-    'bower_components/select2/select2.js',
-    'bower_components/ui-select/src/select3.js',
-    'bower_components/angular-ui-select/dist/select.min.js',
-    'bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js',
-    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
-    'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
+    'bower_components/angular-aria/angular-aria.js',
+    'bower_components/angular-animate/angular-animate.js',
+    'bower_components/angular-material/angular-material.js',
+    'bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
 ];
 
 var JS_APP = [

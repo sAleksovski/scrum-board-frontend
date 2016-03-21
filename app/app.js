@@ -2,17 +2,18 @@
     'use strict';
 
     var app = angular.module('scrum-board-frontend', [
+        'ngMaterial',
         'ui.router',
-        'ui.bootstrap',
+        // 'ui.bootstrap',
         "dndLists",
         'ngResource',
         'ngCookies',
         'pascalprecht.translate',
-        'toastr',
-        'ui.select',
+        // 'toastr',
+        // 'ui.select',
         'xeditable']);
 
-    app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+    app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider) {
         $stateProvider
         .state('/', {
             url: '/',
@@ -28,10 +29,10 @@
         $urlRouterProvider.otherwise('/');
 
         $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    });
 
-    app.run(function(editableOptions) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+        // $mdThemingProvider.theme('default')
+        //     .primaryPalette('teal')
+        //     .accentPalette('red');
     });
 
 })();

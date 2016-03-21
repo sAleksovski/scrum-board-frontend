@@ -2,17 +2,18 @@
     'use strict';
 
     var app = angular.module('scrum-board-frontend', [
+        'ngMaterial',
         'ui.router',
-        'ui.bootstrap',
+        // 'ui.bootstrap',
         "dndLists",
         'ngResource',
         'ngCookies',
         'pascalprecht.translate',
-        'toastr',
-        'ui.select',
+        // 'toastr',
+        // 'ui.select',
         'xeditable']);
 
-    app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+    app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider) {
         $stateProvider
         .state('/', {
             url: '/',
@@ -28,10 +29,10 @@
         $urlRouterProvider.otherwise('/');
 
         $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    });
 
-    app.run(function(editableOptions) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+        // $mdThemingProvider.theme('default')
+        //     .primaryPalette('teal')
+        //     .accentPalette('red');
     });
 
 })();
@@ -59,12 +60,14 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('BoardController', function ($scope, $stateParams, $cookies, $uibModal, BoardService, SprintService, TaskService) {
+    app.controller('BoardController', function ($scope, $stateParams, $cookies, $mdDialog, $mdMedia, BoardService, SprintService, TaskService) {
 
         $scope.slug = $stateParams.slug;
 
         $scope.sprintChanged = sprintChanged;
         $scope.openAddSprintModal = openAddSprintModal;
+
+        $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
         $scope.tasks = {
             "TODO": [],
@@ -90,22 +93,31 @@
         });
 
         function sprintChanged() {
+            console.log($scope.currentSprint);
             saveSelectedSprint();
             TaskService.getTasks($scope.slug, $scope.currentSprint.id).then(function (response) {
                 addTasksToModel(response.data);
             });
         }
 
-        function openAddSprintModal() {
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'app/modal/sprint-add-modal.tpl.html',
-                controller: 'SprintAddModalController'
-            });
-
-            modalInstance.result.then(function (sprint) {
-                createSprint(sprint);
-            }, function () {
+        function openAddSprintModal(ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+            $mdDialog.show({
+                    controller: 'SprintAddModalController',
+                    templateUrl: 'app/modal/sprint-add-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen
+                })
+                .then(function (sprint) {
+                    createSprint(sprint);
+                }, function () {
+                });
+            $scope.$watch(function () {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function (wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
             });
         }
 
@@ -252,6 +264,10 @@
                     $scope.user.profilePicture = response.data.imageUrl;
                 });
 
+                $scope.openMenu = function($mdOpenMenu, ev) {
+                    $mdOpenMenu(ev);
+                };
+
                 $scope.logout = function() {
                     AuthService.logout().then(function() {
                         $scope.authenticated = false;
@@ -317,10 +333,10 @@
             restrict: 'E',
             templateUrl: 'app/task.tpl.html',
             scope: {
-                task: '=task',
-                selected: '=selected'
+                task: '=task'
             },
             link: function($scope) {
+                $scope.selected = false;
             }
         }
     }]);
@@ -433,51 +449,25 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('SprintAddModalController', function ($scope, $uibModalInstance) {
+    app.controller('SprintAddModalController', function ($scope, $mdDialog) {
 
         $scope.sprint = {};
 
-        $scope.ok = function () {
+        $scope.hide = function() {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+        $scope.answer = function() {
             $scope.error = '';
             if (typeof $scope.sprint.name === 'undefined'
                 || typeof $scope.sprint.fromDate === 'undefined'
                 || typeof $scope.sprint.toDate === 'undefined') {
-                $scope.error = 'Both dates are required!';
+                $scope.error = 'Both dates and name are required!';
                 return;
             }
-            $uibModalInstance.close($scope.sprint);
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        $scope.inlineOptions = {
-            showWeeks: true
-        };
-
-        $scope.dateOptions = {
-            formatYear: 'yy',
-            startingDay: 1
-        };
-
-        $scope.openFrom = function() {
-            $scope.popupFrom.opened = true;
-        };
-
-        $scope.openTo = function() {
-            $scope.popupTo.opened = true;
-        };
-
-        $scope.formats = ['yyyy-MM-dd', 'dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-        $scope.format = $scope.formats[0];
-
-        $scope.popupFrom = {
-            opened: false
-        };
-
-        $scope.popupTo = {
-            opened: false
+            $mdDialog.hide($scope.sprint);
         };
     });
 })();

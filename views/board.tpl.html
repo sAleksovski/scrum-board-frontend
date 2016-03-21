@@ -1,13 +1,23 @@
 <div class="board-container">
-    <div class="board-navbar">
-        <select class="form-control board-sprint-select"
-                ng-change="sprintChanged()"
-                ng-options="b.name for b in board.sprints track by b.id"
-                ng-model="currentSprint"></select>
-        <a class="btn btn-xs btn-info board-sprint-btn-add" href="" ng-click="openAddSprintModal()"><i
-                class="glyphicon glyphicon-plus-sign"></i>
-            Add</a>
-    </div>
+    <md-toolbar class="board-navbar">
+        <div class="md-toolbar-tools">
+            <label>Sprint: </label>
+            <md-input-container style="margin: 0;">
+                <label class="hide">Sprint</label>
+                <md-select ng-model="currentSprint" ng-change="sprintChanged()">
+                    <md-option ng-repeat="b in board.sprints" ng-value="b">{{b.name}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-button ng-click="openAddSprintModal($event)" class="md-icon-button">
+                <md-icon>add</md-icon>
+            </md-button>
+            <!-- fill up the space between left and right area -->
+            <span flex></span>
+            <md-button ng-click="openAddSprintModal()" class="md-icon-button">
+                <md-icon>settings</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
 
     <div class="task-list-container">
         <task-list ng-repeat="(zone, list) in tasks" slug="slug" sprint="currentSprint" zone="zone"

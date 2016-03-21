@@ -4,12 +4,16 @@ html, body {
 }
 
 body {
-    color: #4d4d4d;
     font: 14px "Helvetica Neue",Arial,Helvetica,sans-serif;
 }
 
 .navbar-scrum {
-    /*background-color: #009688;*/
+    min-height: 0;
+}
+
+.navbar-scrum-toolbar-tools {
+    height: 52px;
+    max-height: 52px;
 }
 
 .full-height {
@@ -17,7 +21,7 @@ body {
 }
 
 .height-minus-navbar {
-    height: calc(100% - 53px);
+    height: calc(100% - 52px);
 }
 
 .app-container {
@@ -39,10 +43,17 @@ body {
 }
 
 .board-navbar {
-    background-color: #f8f8f8;
-    padding: 4px;
-    height: 32px;
+    color: black !important;
+    background-color: #f8f8f8 !important;
+    /*padding: 4px;*/
+    height: 32px !important;
+    max-height: 32px !important;
+    min-height: 0;
     margin-bottom: 10px;
+}
+
+.board-navbar md-icon {
+    color: black !important;
 }
 
 .board-sprint-select {
@@ -235,4 +246,21 @@ ul[dnd-list] {
 ::-webkit-scrollbar-thumb:horizontal:active {
     background: rgba(0, 0, 0, .3);
     -webkit-border-radius: 100px
+}
+
+.new-board .md-errors-spacer {
+    display: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.task-list md-card md-card-header:last-child md-card-avatar {
+    margin-left: 0;
+    /*margin-right: 0;*/
+}
+
+.form-error {
+    color: red;
 }
