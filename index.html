@@ -13,7 +13,7 @@
 
     <!-- Concatenated CSS -->
     <link href="/dest/lib.css?rev=2d6e6a17fc566630c447659eb64fa06d" rel="stylesheet">
-    <link href="/dest/app.css?rev=845d2fb8d6b042a913a74e6b5e944f74" rel="stylesheet">
+    <link href="/dest/app.css?rev=f0fe678cd493ce7a84377725c2159f1f" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -26,10 +26,10 @@
 
 <body ng-app="scrum-board-frontend" ng-cloak class="ng-cloak">
 
-<div class="app-container" ng-controller="AuthController" ng-show="show">
+<div class="app-container" ng-controller="AuthController" ng-show="show" layout="column">
     <navbar ng-if="authenticated"></navbar>
-    <div ng-show="authenticated" class="height-minus-navbar">
-        <div ui-view ng-if="authenticated" class="full-height"></div>
+    <div ng-show="authenticated" flex layout>
+        <div ui-view ng-if="authenticated" flex layout></div>
     </div>
     <landing-page ng-if="!authenticated"></landing-page>
 </div>
@@ -39,6 +39,6 @@
 <!-- Concatenated application -->
 <script src="/dest/src.js?rev=3a97c7ccc28e3eaf5cd093281dcc50a2"></script>
 <!-- All html templates -->
-<script src="/dest/templates.js?rev=a487fd1d883d0c4e73d6eb4edee5f652"></script>
+<script src="/dest/templates.js?rev=d5c96750609193648bc888f6db5cf883"></script>
 </body>
 </html>

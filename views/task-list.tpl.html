@@ -1,8 +1,19 @@
-<md-content class="task-list">
-    <md-list flex style="padding: 0;">
-        <md-subheader class="md-no-sticky">{{zones[zone]}}</md-subheader>
-        <ul dnd-list="list"
-            dnd-drop="dropCallback(index, item, external, type, zone)">
+<div class="task-list" layout="column">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>{{zones[zone]}}</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button">
+                <md-icon>add</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div layout flex>
+        <md-list flex
+                 dnd-list="list"
+                 dnd-drop="dropCallback(index, item, external, type, zone)">
             <li ng-repeat="item in list"
                 dnd-draggable="item"
                 dnd-effect-allowed="move"
@@ -10,6 +21,6 @@
                 ng-class="{selected: selected === item}">
                 <task task="item"></task>
             </li>
-        </ul>
-    </md-list>
-</md-content>
+        </md-list>
+    </div>
+</div>

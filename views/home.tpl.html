@@ -1,23 +1,26 @@
-<div layout="row" layout-wrap>
-    <div flex="33" ng-repeat="b in boards">
-        <md-card>
-            <a ng-href="#/b/{{b.slug}}">
+<div flex>
+    <div layout layout-wrap>
+        <div flex="33" ng-repeat="b in boards">
+            <md-card>
+                <a ng-href="#/b/{{b.slug}}">
+                    <md-card-content>
+                        {{b.name}}
+                    </md-card-content>
+                </a>
+            </md-card>
+        </div>
+        <div flex="33">
+            <md-card>
                 <md-card-content>
-                    {{b.name}}
+                    <a href="" ng-click="showAdd()" ng-show="!showForm">Add new board</a>
+                    <md-input-container ng-show="showForm" class="m0 new-board">
+                        <label class="hide">Color</label>
+                        <input type="text" ng-model="data.name" ng-keydown="keyDown($event)" focus="{{showForm}}"
+                               ng-blur="onBlur()">
+                    </md-input-container>
                 </md-card-content>
-            </a>
-        </md-card>
+            </md-card>
+        </div>
     </div>
-    <div flex="33">
-        <md-card>
-            <md-card-content>
-                <a href="" ng-click="showAdd()" ng-show="!showForm">Add new board</a>
-                <md-input-container ng-show="showForm" class="m0 new-board">
-                    <label class="hide">Color</label>
-                    <input type="text" ng-model="data.name" ng-keydown="keyDown($event)" focus="{{showForm}}"
-                           ng-blur="onBlur()">
-                </md-input-container>
-            </md-card-content>
-        </md-card>
-    </div>
+
 </div>

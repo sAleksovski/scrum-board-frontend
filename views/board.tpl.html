@@ -1,8 +1,8 @@
-<div class="board-container">
+<div layout="column" flex>
     <md-toolbar class="board-navbar">
         <div class="md-toolbar-tools">
             <label>Sprint: </label>
-            <md-input-container style="margin: 0;">
+            <md-input-container class="m0">
                 <label class="hide">Sprint</label>
                 <md-select ng-model="currentSprint" ng-change="sprintChanged()">
                     <md-option ng-repeat="b in board.sprints" ng-value="b">{{b.name}}</md-option>
@@ -11,7 +11,6 @@
             <md-button ng-click="openAddSprintModal($event)" class="md-icon-button">
                 <md-icon>add</md-icon>
             </md-button>
-            <!-- fill up the space between left and right area -->
             <span flex></span>
             <md-button ng-click="openAddSprintModal()" class="md-icon-button">
                 <md-icon>settings</md-icon>
@@ -19,8 +18,8 @@
         </div>
     </md-toolbar>
 
-    <div class="task-list-container">
-        <task-list ng-repeat="(zone, list) in tasks" slug="slug" sprint="currentSprint" zone="zone"
+    <div flex layout class="task-list-container">
+        <task-list layout ng-repeat="(zone, list) in tasks" slug="slug" sprint="currentSprint" zone="zone"
                    tasks="list"></task-list>
     </div>
 </div>
