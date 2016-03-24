@@ -1,0 +1,80 @@
+<md-dialog ng-cloak class="add-modal-dialog">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Create new Task</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout>
+                    <md-input-container class="md-block" flex>
+                        <label>Title</label>
+                        <input ng-model="task.name">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="center center" ng-show="error">
+                    <div class="form-error">{{ error }}</div>
+                </div>
+                <div layout>
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="task.description"></textarea>
+                    </md-input-container>
+                </div>
+                <div layout layout-margin>
+                    <md-input-container flex>
+                        <label>Task progress</label>
+                        <md-select ng-model="task.progress" ng-selected="tp == zone">
+                            <md-option ng-repeat="tp in progressList" ng-value="tp">{{tp | capitalize}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Task difficulty</label>
+                        <md-select ng-model="task.difficulty" ng-selected="tp == zone">
+                            <md-option ng-repeat="td in dificultyList" ng-value="td">{{td | capitalize}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Task priority</label>
+                        <md-select ng-model="task.priority" ng-selected="tp == zone">
+                            <md-option ng-repeat="tp in priorityList" ng-value="tp">{{tp | capitalize}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout>
+                    <md-autocomplete flex
+                            md-selected-item="task.assignedTo"
+                            md-search-text="searchText"
+                            md-items="item in querySearch(searchText)"
+                            md-item-text="item.firstName + ' ' + item.lastName"
+                            md-min-length="0"
+                            placeholder="Assign task">
+                        <md-item-template>
+                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.firstName + ' ' + item.lastName}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            No states matching "{{searchText}}" were found.
+                        </md-not-found>
+                    </md-autocomplete>
+                </div>
+                <div layout="row" layout-align="center center" ng-show="error">
+                    <div class="form-error">{{ error }}</div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="add()">
+                Save
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

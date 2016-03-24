@@ -81,7 +81,7 @@
                 "DONE": []
             };
             tasks.forEach(function (task) {
-                $scope.tasks[task.taskProgress].push(task);
+                $scope.tasks[task.progress].push(task);
             })
         }
 

@@ -1,5 +1,6 @@
 <md-card ng-click="selected = !selected">
     <md-card-header>
+        <span class="task-priority {{ 'task-priority-' + task.priority}}" title="{{task.priority | capitalize}}"></span>
         <md-card-avatar>
             <img class="md-user-avatar" ng-src="{{task.assignedTo.imageUrl}}"/>
         </md-card-avatar>
@@ -8,4 +9,8 @@
             <span class="md-subhead" ng-show="selected">{{task.description}}</span>
         </md-card-header-text>
     </md-card-header>
+    <span class="task-icons-container">
+        <span><md-icon class="task-icons">comment</md-icon> {{task.comments.length}}</span>
+        <span><md-icon class="task-icons">build</md-icon> {{task.difficulty | capitalize}}</span>
+    </span>
 </md-card>

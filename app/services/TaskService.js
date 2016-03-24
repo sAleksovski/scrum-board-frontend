@@ -9,12 +9,17 @@
         var service = {};
 
         service.getTasks = getTasks;
+        service.createTask = createTask;
         service.updateTask = updateTask;
 
         return service;
 
         function getTasks(slug, sprintId) {
             return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks')
+        }
+
+        function createTask(slug, sprintId, task) {
+            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks', task);
         }
 
         function updateTask(slug, sprintId, task) {

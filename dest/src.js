@@ -138,7 +138,7 @@
                 "DONE": []
             };
             tasks.forEach(function (task) {
-                $scope.tasks[task.taskProgress].push(task);
+                $scope.tasks[task.progress].push(task);
             })
         }
 
@@ -290,7 +290,7 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('taskList', ['$location', '$rootScope', '$http', 'TaskService', function($location, $rootScope, $http, TaskService) {
+    app.directive('taskList', ['$mdDialog', '$mdMedia', 'TaskService', function($mdDialog, $mdMedia, TaskService) {
         return {
             restrict: 'E',
             templateUrl: 'app/task-list.tpl.html',
@@ -302,6 +302,8 @@
             },
             link: function($scope) {
 
+                $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+
                 $scope.zones = [];
                 $scope.zones["TODO"] = "Todo";
                 $scope.zones["IN_PROGRESS"] = "In Progress";
@@ -309,15 +311,44 @@
                 $scope.zones["BLOCKED"] = "Blocked";
                 $scope.zones["DONE"] = "Done";
 
-                $scope.dropCallback = function(index, item, external, type, zone) {
-                    item.taskProgress = zone;
+                $scope.dropCallback = function(index, task, external, type, zone) {
+                    task.progress = zone;
 
-                    TaskService.updateTask($scope.slug, $scope.sprint.id, item).then(function(response) {
+                    TaskService.updateTask($scope.slug, $scope.sprint.id, task).then(function(response) {
                     }, function (response) {
                     });
 
-                    return item;
+                    return task;
                 };
+
+                $scope.openAddTaskModal = function (ev, zone) {
+                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+                    $mdDialog.show({
+                            controller: 'TaskAddModalController',
+                            templateUrl: 'app/modal/task-add-modal.tpl.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            clickOutsideToClose: true,
+                            fullscreen: useFullScreen,
+                            locals: {zone: zone, slug: $scope.slug}
+                        })
+                        .then(function (task) {
+                            createTask(task);
+                        }, function () {
+                        });
+                    $scope.$watch(function () {
+                        return $mdMedia('xs') || $mdMedia('sm');
+                    }, function (wantsFullScreen) {
+                        $scope.customFullscreen = (wantsFullScreen === true);
+                    });
+                };
+
+                function createTask(task) {
+                    TaskService.createTask($scope.slug, $scope.sprint.id, task).then(function (response) {
+                        console.log(response);
+                        $scope.list.push(response.data);
+                    });
+                }
             }
         }
     }]);
@@ -341,6 +372,18 @@
         }
     }]);
 
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.filter('capitalize', function() {
+        return function(input) {
+            input = input.replace('_', ' ');
+            return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+        }
+    });
 })();
 (function() {
     'use strict';
@@ -430,12 +473,17 @@
         var service = {};
 
         service.getTasks = getTasks;
+        service.createTask = createTask;
         service.updateTask = updateTask;
 
         return service;
 
         function getTasks(slug, sprintId) {
             return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks')
+        }
+
+        function createTask(slug, sprintId, task) {
+            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks', task);
         }
 
         function updateTask(slug, sprintId, task) {
@@ -459,7 +507,7 @@
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
-        $scope.answer = function() {
+        $scope.add = function() {
             $scope.error = '';
             if (typeof $scope.sprint.name === 'undefined'
                 || typeof $scope.sprint.fromDate === 'undefined'
@@ -469,5 +517,57 @@
             }
             $mdDialog.hide($scope.sprint);
         };
+    });
+})();
+(function () {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.controller('TaskAddModalController', function ($scope, $mdDialog, BoardService, zone, slug) {
+
+        $scope.users = [];
+
+        BoardService.getBoard(slug).then(function (response) {
+            response.data.boardUserRole.forEach(function (user) {
+                $scope.users.push(user.user);
+            });
+            console.log($scope.users);
+        });
+
+        $scope.task = {};
+        $scope.task.taskProgress = zone;
+
+        $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];
+        $scope.dificultyList = ['_0', '_1', '_2', '_3', '_5', '_8', '_13', '_21', '_34', '_55', '_89'];
+        $scope.priorityList = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+
+        $scope.hide = function () {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+        $scope.add = function () {
+            $scope.error = '';
+            if (typeof $scope.task.name === 'undefined') {
+                $scope.error = 'The title is required!';
+                return;
+            }
+            $mdDialog.hide($scope.task);
+        };
+
+        $scope.querySearch = function (query) {
+            return query ? $scope.users.filter(createFilterFor(query)) : $scope.users;
+        };
+
+        function createFilterFor(query) {
+            var lowercaseQuery = angular.lowercase(query);
+            return function filterFn(user) {
+                var u = user.firstName + ' ' + user.lastName + ' ' + user.firstName;
+                u = angular.lowercase(u);
+                return (u.indexOf(lowercaseQuery) > -1);
+            };
+        }
     });
 })();

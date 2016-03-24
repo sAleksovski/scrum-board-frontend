@@ -163,6 +163,10 @@ md-list[dnd-list] {
     width: 285px;
 }
 
+.task-list md-toolbar {
+    border-radius: 2px 2px 0 0;
+}
+
 .task-list md-toolbar,
 .task-list .md-toolbar-tools {
     height: 50px;
@@ -188,4 +192,49 @@ a {
 
 .form-error {
     color: red;
+}
+
+.add-modal-dialog md-input-container {
+    margin: 0;
+}
+
+.task-priority {
+    height: 10px;
+    width: 30px;
+    position: absolute;
+    right: 14px;
+    top: 6px;
+    border-radius: 3px;
+}
+
+.task-priority-LOW {
+    background-color: #FFEB3B;
+}
+
+.task-priority-MEDIUM {
+    background-color: #FBC02D;;
+}
+
+.task-priority-HIGH {
+    background-color: #FF5722;
+}
+
+.task-priority-URGENT {
+    background-color: #D50000;
+}
+
+.task-icons-container {
+    position: absolute;
+    bottom: 6px;
+    right: 14px;
+}
+
+.task-icons-container span {
+    margin-left: 5px;
+}
+
+.task-icons {
+    font-size: 16px !important;
+    height: 16px;
+    width: 16px;
 }

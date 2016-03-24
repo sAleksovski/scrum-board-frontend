@@ -11,10 +11,10 @@
         </div>
         <div flex="33">
             <md-card>
-                <md-card-content>
+                <md-card-content layout>
                     <a href="" ng-click="showAdd()" ng-show="!showForm">Add new board</a>
-                    <md-input-container ng-show="showForm" class="m0 new-board">
-                        <label class="hide">Color</label>
+                    <md-input-container ng-show="showForm" class="m0 new-board" flex>
+                        <label>Board name</label>
                         <input type="text" ng-model="data.name" ng-keydown="keyDown($event)" focus="{{showForm}}"
                                ng-blur="onBlur()">
                     </md-input-container>

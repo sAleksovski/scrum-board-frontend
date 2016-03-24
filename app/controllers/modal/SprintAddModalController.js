@@ -13,7 +13,7 @@
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
-        $scope.answer = function() {
+        $scope.add = function() {
             $scope.error = '';
             if (typeof $scope.sprint.name === 'undefined'
                 || typeof $scope.sprint.fromDate === 'undefined'
