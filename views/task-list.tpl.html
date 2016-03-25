@@ -17,8 +17,7 @@
             <li ng-repeat="item in list"
                 dnd-draggable="item"
                 dnd-effect-allowed="move"
-                dnd-moved="list.splice($index, 1)"
-                ng-class="{selected: selected === item}">
+                dnd-moved="list.splice($index, 1)">
                 <task task="item"></task>
             </li>
         </md-list>

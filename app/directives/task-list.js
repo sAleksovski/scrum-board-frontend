@@ -26,6 +26,15 @@
 
                 $scope.dropCallback = function(index, task, external, type, zone) {
                     task.progress = zone;
+                    if ($scope.list.length != 0) {
+                        if (index == 0) {
+                            task.position = $scope.list[0].position - 1;
+                        } else if (index == $scope.list.length) {
+                            task.position = $scope.list[$scope.list.length - 1].position + 1;
+                        } else {
+                            task.position = parseFloat($scope.list[index - 1].position + $scope.list[index].position) / 2.0;
+                        }
+                    }
 
                     TaskService.updateTask($scope.slug, $scope.sprint.id, task).then(function(response) {
                     }, function (response) {
@@ -58,7 +67,6 @@
 
                 function createTask(task) {
                     TaskService.createTask($scope.slug, $scope.sprint.id, task).then(function (response) {
-                        console.log(response);
                         $scope.list.push(response.data);
                     });
                 }

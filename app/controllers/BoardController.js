@@ -36,7 +36,6 @@
         });
 
         function sprintChanged() {
-            console.log($scope.currentSprint);
             saveSelectedSprint();
             TaskService.getTasks($scope.slug, $scope.currentSprint.id).then(function (response) {
                 addTasksToModel(response.data);

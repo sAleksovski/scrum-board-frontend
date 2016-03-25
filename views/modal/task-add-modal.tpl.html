@@ -29,19 +29,19 @@
                 <div layout layout-margin>
                     <md-input-container flex>
                         <label>Task progress</label>
-                        <md-select ng-model="task.progress" ng-selected="tp == zone">
+                        <md-select ng-model="task.progress">
                             <md-option ng-repeat="tp in progressList" ng-value="tp">{{tp | capitalize}}</md-option>
                         </md-select>
                     </md-input-container>
                     <md-input-container flex>
                         <label>Task difficulty</label>
-                        <md-select ng-model="task.difficulty" ng-selected="tp == zone">
+                        <md-select ng-model="task.difficulty">
                             <md-option ng-repeat="td in dificultyList" ng-value="td">{{td | capitalize}}</md-option>
                         </md-select>
                     </md-input-container>
                     <md-input-container flex>
                         <label>Task priority</label>
-                        <md-select ng-model="task.priority" ng-selected="tp == zone">
+                        <md-select ng-model="task.priority">
                             <md-option ng-repeat="tp in priorityList" ng-value="tp">{{tp | capitalize}}</md-option>
                         </md-select>
                     </md-input-container>
