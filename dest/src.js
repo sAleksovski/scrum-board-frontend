@@ -42,180 +42,6 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('focus', ['$timeout', function($timeout) {
-        return {
-            scope : {
-                trigger : '@focus'
-            },
-            link : function(scope, element) {
-                scope.$watch('trigger', function(value) {
-                    if (value === "true") {
-                        $timeout(function() {
-                            element[0].focus();
-                        });
-                    }
-                });
-            }
-        }
-    }]);
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.directive('landingPage', function() {
-        return {
-            restrict: 'EA',
-            templateUrl: 'app/landing-page.tpl.html'
-        }
-    });
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.directive('navbar', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
-        return {
-            restrict: 'EA',
-            templateUrl: 'app/navbar.tpl.html',
-            link: function($scope) {
-                $scope.location = $location.path();
-                $rootScope.$on('$locationChangeStart', function(event, next) {
-                    $scope.location = next.split('#')[1];
-
-                });
-
-                $scope.user = {};
-
-                AuthService.getUser().then(function(response) {
-                    $scope.user.name = response.data.firstName + ' ' + response.data.lastName;
-                    $scope.user.profilePicture = response.data.imageUrl;
-                });
-
-                $scope.openMenu = function($mdOpenMenu, ev) {
-                    $mdOpenMenu(ev);
-                };
-
-                $scope.logout = function() {
-                    AuthService.logout().then(function() {
-                        $scope.authenticated = false;
-                        $location.path('/');
-                        location.reload(true);
-                    }, function(response) {
-                        console.log(response);
-                        $scope.authenticated = false;
-                        $location.path('/');
-                        location.reload(true);
-                    });
-                };
-            }
-        }
-    }]);
-
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.directive('taskList', ['$mdDialog', '$mdMedia', 'TaskService', function($mdDialog, $mdMedia, TaskService) {
-        return {
-            restrict: 'E',
-            templateUrl: 'app/task-list.tpl.html',
-            scope: {
-                list: '=tasks',
-                slug: '=slug',
-                sprint: '=sprint',
-                zone: '=zone'
-            },
-            link: function($scope) {
-
-                $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
-
-                $scope.zones = [];
-                $scope.zones["TODO"] = "Todo";
-                $scope.zones["IN_PROGRESS"] = "In Progress";
-                $scope.zones["TESTING"] = "Testing";
-                $scope.zones["BLOCKED"] = "Blocked";
-                $scope.zones["DONE"] = "Done";
-
-                $scope.dropCallback = function(index, task, external, type, zone) {
-                    task.progress = zone;
-                    if ($scope.list.length != 0) {
-                        if (index == 0) {
-                            task.position = $scope.list[0].position - 1;
-                        } else if (index == $scope.list.length) {
-                            task.position = $scope.list[$scope.list.length - 1].position + 1;
-                        } else {
-                            task.position = parseFloat($scope.list[index - 1].position + $scope.list[index].position) / 2.0;
-                        }
-                    }
-
-                    TaskService.updateTask($scope.slug, $scope.sprint.id, task).then(function(response) {
-                    }, function (response) {
-                    });
-
-                    return task;
-                };
-
-                $scope.openAddTaskModal = function (ev, zone) {
-                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
-                    $mdDialog.show({
-                            controller: 'TaskAddModalController',
-                            templateUrl: 'app/modal/task-add-modal.tpl.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            clickOutsideToClose: true,
-                            fullscreen: useFullScreen,
-                            locals: {zone: zone, slug: $scope.slug}
-                        })
-                        .then(function (task) {
-                            createTask(task);
-                        }, function () {
-                        });
-                    $scope.$watch(function () {
-                        return $mdMedia('xs') || $mdMedia('sm');
-                    }, function (wantsFullScreen) {
-                        $scope.customFullscreen = (wantsFullScreen === true);
-                    });
-                };
-
-                function createTask(task) {
-                    TaskService.createTask($scope.slug, $scope.sprint.id, task).then(function (response) {
-                        $scope.list.push(response.data);
-                    });
-                }
-            }
-        }
-    }]);
-
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.directive('task', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
-        return {
-            restrict: 'E',
-            templateUrl: 'app/task.tpl.html',
-            scope: {
-                task: '=task'
-            },
-            link: function($scope) {
-                $scope.selected = false;
-            }
-        }
-    }]);
-
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
     app.controller('AuthController', function($scope, $location, AuthService) {
         $scope.authenticated = false;
         $scope.show = false;
@@ -385,18 +211,6 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.filter('capitalize', function() {
-        return function(input) {
-            input = input.replace('_', ' ');
-            return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
-        }
-    });
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
     app.service('AuthService', AuthService);
 
     function AuthService($http) {
@@ -482,6 +296,7 @@
         service.getTasks = getTasks;
         service.createTask = createTask;
         service.updateTask = updateTask;
+        service.insertComment = insertComment;
 
         return service;
 
@@ -497,7 +312,262 @@
             return $http.put('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + task.id, task);
         }
 
+        function insertComment(slug, sprintId, taskId, comment) {
+            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + taskId + '/comments', comment);
+        }
+
     }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('enterSubmit', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, elem, attrs) {
+
+                elem.bind('keydown', function(event) {
+                    var code = event.keyCode || event.which;
+
+                    if (code === 13) {
+                        if (!event.shiftKey) {
+                            event.preventDefault();
+                            scope.$apply(attrs.enterSubmit);
+                        }
+                    }
+                });
+            }
+        }
+    });
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('focus', ['$timeout', function($timeout) {
+        return {
+            scope : {
+                trigger : '@focus'
+            },
+            link : function(scope, element) {
+                scope.$watch('trigger', function(value) {
+                    if (value === "true") {
+                        $timeout(function() {
+                            element[0].focus();
+                        });
+                    }
+                });
+            }
+        }
+    }]);
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('landingPage', function() {
+        return {
+            restrict: 'EA',
+            templateUrl: 'app/landing-page.tpl.html'
+        }
+    });
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('navbar', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+        return {
+            restrict: 'EA',
+            templateUrl: 'app/navbar.tpl.html',
+            link: function($scope) {
+                $scope.location = $location.path();
+                $rootScope.$on('$locationChangeStart', function(event, next) {
+                    $scope.location = next.split('#')[1];
+
+                });
+
+                $scope.user = {};
+
+                AuthService.getUser().then(function(response) {
+                    $scope.user.name = response.data.firstName + ' ' + response.data.lastName;
+                    $scope.user.profilePicture = response.data.imageUrl;
+                });
+
+                $scope.openMenu = function($mdOpenMenu, ev) {
+                    $mdOpenMenu(ev);
+                };
+
+                $scope.logout = function() {
+                    AuthService.logout().then(function() {
+                        $scope.authenticated = false;
+                        $location.path('/');
+                        location.reload(true);
+                    }, function(response) {
+                        console.log(response);
+                        $scope.authenticated = false;
+                        $location.path('/');
+                        location.reload(true);
+                    });
+                };
+            }
+        }
+    }]);
+
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('taskList', ['$mdDialog', '$mdMedia', 'TaskService', function($mdDialog, $mdMedia, TaskService) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/task-list.tpl.html',
+            scope: {
+                list: '=tasks',
+                slug: '=slug',
+                sprint: '=sprint',
+                zone: '=zone'
+            },
+            link: function($scope) {
+
+                $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+
+                $scope.zones = [];
+                $scope.zones["TODO"] = "Todo";
+                $scope.zones["IN_PROGRESS"] = "In Progress";
+                $scope.zones["TESTING"] = "Testing";
+                $scope.zones["BLOCKED"] = "Blocked";
+                $scope.zones["DONE"] = "Done";
+
+                $scope.dropCallback = function(index, task, external, type, zone) {
+                    task.progress = zone;
+                    if ($scope.list.length != 0) {
+                        if (index == 0) {
+                            task.position = $scope.list[0].position - 1;
+                        } else if (index == $scope.list.length) {
+                            task.position = $scope.list[$scope.list.length - 1].position + 1;
+                        } else {
+                            task.position = parseFloat($scope.list[index - 1].position + $scope.list[index].position) / 2.0;
+                        }
+                    }
+
+                    TaskService.updateTask($scope.slug, $scope.sprint.id, task).then(function(response) {
+                    }, function (response) {
+                    });
+
+                    return task;
+                };
+
+                $scope.openAddTaskModal = function (ev, zone) {
+                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+                    $mdDialog.show({
+                            controller: 'TaskAddModalController',
+                            templateUrl: 'app/modal/task-add-modal.tpl.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            clickOutsideToClose: true,
+                            fullscreen: useFullScreen,
+                            locals: {zone: zone, slug: $scope.slug}
+                        })
+                        .then(function (task) {
+                            createTask(task);
+                        }, function () {
+                        });
+                    $scope.$watch(function () {
+                        return $mdMedia('xs') || $mdMedia('sm');
+                    }, function (wantsFullScreen) {
+                        $scope.customFullscreen = (wantsFullScreen === true);
+                    });
+                };
+
+                function createTask(task) {
+                    TaskService.createTask($scope.slug, $scope.sprint.id, task).then(function (response) {
+                        $scope.list.push(response.data);
+                    });
+                }
+            }
+        }
+    }]);
+
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.directive('task', ['$mdMedia', '$mdDialog', 'TaskService', function($mdMedia, $mdDialog, TaskService) {
+        return {
+            restrict: 'E',
+            templateUrl: 'app/task.tpl.html',
+            scope: {
+                task: '=task',
+                slug: '=slug',
+                sprint: '=sprint'
+            },
+            link: function($scope) {
+
+                $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+
+                $scope.showTaskDetails = function (ev) {
+                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+                    $mdDialog.show({
+                            controller: 'TaskDetailsModalController',
+                            templateUrl: 'app/modal/task-details-modal.tpl.html',
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            clickOutsideToClose: true,
+                            fullscreen: useFullScreen,
+                            onRemoving: function () {
+                                updateTask($scope.task);
+                            },
+                            locals: {task: $scope.task, slug: $scope.slug, sprint: $scope.sprint.id}
+                        });
+                    $scope.$watch(function () {
+                        return $mdMedia('xs') || $mdMedia('sm');
+                    }, function (wantsFullScreen) {
+                        $scope.customFullscreen = (wantsFullScreen === true);
+                    });
+                };
+
+                function updateTask(task) {
+                    TaskService.updateTask($scope.slug, $scope.sprint.id, task).then(function (response) {
+                        $scope.task = response.data;
+                    });
+                }
+            }
+        }
+    }]);
+
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.filter('arraytodate', function() {
+        return function(input) {
+            return new Date(input[0], input[1], input[2], input[3], input[4], input[5]);
+        }
+    });
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.filter('capitalize', function() {
+        return function(input) {
+            input = input.replace('_', ' ');
+            return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+        }
+    });
 })();
 (function() {
     'use strict';
@@ -576,5 +646,40 @@
                 return (u.indexOf(lowercaseQuery) > -1);
             };
         }
+    });
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.controller('TaskDetailsModalController', function ($scope, $mdDialog, TaskService, task, slug, sprint) {
+
+        $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];
+        $scope.dificultyList = ['_0', '_1', '_2', '_3', '_5', '_8', '_13', '_21', '_34', '_55', '_89'];
+        $scope.priorityList = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+
+        $scope.task = task;
+        $scope.comment = '';
+
+        $scope.save = function () {
+            TaskService.updateTask(slug, sprint, $scope.task).then(function (response) {
+                $scope.task = response.data;
+            });
+        };
+
+        $scope.insertComment = function () {
+            TaskService.insertComment(slug, sprint, $scope.task.id, $scope.comment).then(function (response) {
+                $scope.task.comments.push(response.data);
+                $scope.comment = '';
+            });
+        };
+
+        $scope.hide = function() {
+            $mdDialog.hide($scope.task);
+        };
+        $scope.cancel = function() {
+            $mdDialog.hide($scope.task);
+        };
     });
 })();

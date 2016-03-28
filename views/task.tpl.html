@@ -1,4 +1,4 @@
-<md-card ng-click="selected = !selected">
+<md-card ng-click="showTaskDetails($event)">
     <md-card-header>
         <span class="task-priority {{ 'task-priority-' + task.priority}}" title="{{task.priority | capitalize}}"></span>
         <md-card-avatar>
@@ -6,7 +6,7 @@
         </md-card-avatar>
         <md-card-header-text>
             <span class="md-title">{{task.name}}</span>
-            <span class="md-subhead" ng-show="selected">{{task.description}}</span>
+            <span class="md-subhead">{{task.description | limitTo:20}}{{task.description.length > 20 ? '…' : ''}}</span>
         </md-card-header-text>
     </md-card-header>
     <span class="task-icons-container">
