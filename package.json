@@ -9,7 +9,6 @@
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^2.3.1",
     "gulp-rev-append": "^0.1.6",
-    "proxy-middleware": "^0.15.0",
-    "angular-ui-bootstrap": "^1.2.4"
+    "proxy-middleware": "^0.15.0"
   }
 }

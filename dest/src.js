@@ -211,118 +211,6 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.service('AuthService', AuthService);
-
-    function AuthService($http) {
-        var service = {};
-
-        service.getUser = getUser;
-        service.logout = logout;
-
-        return service;
-
-        function getUser() {
-            return $http.get('/api/user');
-        }
-
-        function logout() {
-            return $http.post('/auth/logout');
-        }
-
-    }
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.service('BoardService', BoardService);
-
-    function BoardService($http) {
-        var service = {};
-
-        service.getBoards = getBoards;
-        service.getBoard = getBoard;
-        service.addBoard = addBoard;
-
-        return service;
-
-        function getBoards() {
-            return $http.get('/api/boards');
-        }
-
-        function getBoard(slug) {
-            return $http.get('/api/boards/' + slug);
-        }
-
-        function addBoard(name) {
-            return $http.post('/api/boards', name);
-        }
-
-    }
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.service('SprintService', SprintService);
-
-    function SprintService($http) {
-        var service = {};
-
-        service.addSprint = addSprint;
-
-        return service;
-
-        function addSprint(slug, sprint) {
-            sprint.fromDate = [sprint.fromDate.getFullYear(), sprint.fromDate.getMonth() + 1, sprint.fromDate.getDate()];
-            sprint.toDate = [sprint.toDate.getFullYear(), sprint.toDate.getMonth() + 1, sprint.toDate.getDate()];
-            return $http.post('/api/boards/' + slug + '/sprints', sprint);
-        }
-
-    }
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.service('TaskService', TaskService);
-
-    function TaskService($http) {
-        var service = {};
-
-        service.getTasks = getTasks;
-        service.createTask = createTask;
-        service.updateTask = updateTask;
-        service.insertComment = insertComment;
-
-        return service;
-
-        function getTasks(slug, sprintId) {
-            return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks')
-        }
-
-        function createTask(slug, sprintId, task) {
-            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks', task);
-        }
-
-        function updateTask(slug, sprintId, task) {
-            return $http.put('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + task.id, task);
-        }
-
-        function insertComment(slug, sprintId, taskId, comment) {
-            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + taskId + '/comments', comment);
-        }
-
-    }
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
     app.directive('enterSubmit', function () {
         return {
             restrict: 'A',
@@ -568,6 +456,118 @@
             return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
         }
     });
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('AuthService', AuthService);
+
+    function AuthService($http) {
+        var service = {};
+
+        service.getUser = getUser;
+        service.logout = logout;
+
+        return service;
+
+        function getUser() {
+            return $http.get('/api/user');
+        }
+
+        function logout() {
+            return $http.post('/auth/logout');
+        }
+
+    }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('BoardService', BoardService);
+
+    function BoardService($http) {
+        var service = {};
+
+        service.getBoards = getBoards;
+        service.getBoard = getBoard;
+        service.addBoard = addBoard;
+
+        return service;
+
+        function getBoards() {
+            return $http.get('/api/boards');
+        }
+
+        function getBoard(slug) {
+            return $http.get('/api/boards/' + slug);
+        }
+
+        function addBoard(name) {
+            return $http.post('/api/boards', name);
+        }
+
+    }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('SprintService', SprintService);
+
+    function SprintService($http) {
+        var service = {};
+
+        service.addSprint = addSprint;
+
+        return service;
+
+        function addSprint(slug, sprint) {
+            sprint.fromDate = [sprint.fromDate.getFullYear(), sprint.fromDate.getMonth() + 1, sprint.fromDate.getDate()];
+            sprint.toDate = [sprint.toDate.getFullYear(), sprint.toDate.getMonth() + 1, sprint.toDate.getDate()];
+            return $http.post('/api/boards/' + slug + '/sprints', sprint);
+        }
+
+    }
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.service('TaskService', TaskService);
+
+    function TaskService($http) {
+        var service = {};
+
+        service.getTasks = getTasks;
+        service.createTask = createTask;
+        service.updateTask = updateTask;
+        service.insertComment = insertComment;
+
+        return service;
+
+        function getTasks(slug, sprintId) {
+            return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks')
+        }
+
+        function createTask(slug, sprintId, task) {
+            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks', task);
+        }
+
+        function updateTask(slug, sprintId, task) {
+            return $http.put('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + task.id, task);
+        }
+
+        function insertComment(slug, sprintId, taskId, comment) {
+            return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + taskId + '/comments', comment);
+        }
+
+    }
 })();
 (function() {
     'use strict';

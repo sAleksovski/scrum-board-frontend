@@ -257,3 +257,32 @@ a {
 .task-comments-list .md-avatar {
     margin-top: 0 !important;
 }
+
+.social,
+.social md-icon {
+    color: #fff !important;
+}
+
+.social-facebook {
+    background-color: #3b5998 !important;
+}
+
+.social-facebook:not([disabled]):hover {
+    background-color: #4c70ba !important;
+}
+
+.social-twitter {
+    background-color: #0084b4 !important;
+}
+
+.social-twitter:not([disabled]):hover {
+    background-color: #00a9e7 !important;
+}
+
+.social-google-plus {
+    background-color: #d34836 !important;
+}
+
+.social-google-plus {
+    background-color: #dc6e60 !important;
+}
