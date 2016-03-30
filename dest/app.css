@@ -283,6 +283,6 @@ a {
     background-color: #d34836 !important;
 }
 
-.social-google-plus {
+.social-google-plus:not([disabled]):hover  {
     background-color: #dc6e60 !important;
 }
