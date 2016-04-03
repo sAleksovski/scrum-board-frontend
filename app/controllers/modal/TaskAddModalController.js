@@ -11,7 +11,6 @@
             response.data.boardUserRole.forEach(function (user) {
                 $scope.users.push(user.user);
             });
-            console.log($scope.users);
         });
 
         $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];

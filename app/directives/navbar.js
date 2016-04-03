@@ -30,8 +30,7 @@
                         $scope.authenticated = false;
                         $location.path('/');
                         location.reload(true);
-                    }, function(response) {
-                        console.log(response);
+                    }, function() {
                         $scope.authenticated = false;
                         $location.path('/');
                         location.reload(true);

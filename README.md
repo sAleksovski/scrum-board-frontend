@@ -23,7 +23,7 @@ The frontend uses a number of open source projects to work properly:
 ### Screenshots
 
 ![Board](http://i.imgur.com/YDHgWM5.png)
-![Single task description](http://i.imgur.com/TPl38Qq.png)
+![Single task description](http://i.imgur.com/Y4xM3YJ.png)
 
 ### Running
 

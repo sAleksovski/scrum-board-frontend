@@ -1,9 +1,9 @@
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('task', ['$mdMedia', '$mdDialog', 'TaskService', function($mdMedia, $mdDialog, TaskService) {
+    app.directive('task', ['$state', '$mdMedia', '$mdDialog', 'TaskService', function ($state, $mdMedia, $mdDialog, TaskService) {
         return {
             restrict: 'E',
             templateUrl: 'app/task.tpl.html',
@@ -12,28 +12,14 @@
                 slug: '=slug',
                 sprint: '=sprint'
             },
-            link: function($scope) {
-
-                $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+            link: function ($scope) {
 
                 $scope.showTaskDetails = function (ev) {
-                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
-                    $mdDialog.show({
-                            controller: 'TaskDetailsModalController',
-                            templateUrl: 'app/modal/task-details-modal.tpl.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            clickOutsideToClose: true,
-                            fullscreen: useFullScreen,
-                            onRemoving: function () {
-                                updateTask($scope.task);
-                            },
-                            locals: {task: $scope.task, slug: $scope.slug, sprint: $scope.sprint.id}
-                        });
-                    $scope.$watch(function () {
-                        return $mdMedia('xs') || $mdMedia('sm');
-                    }, function (wantsFullScreen) {
-                        $scope.customFullscreen = (wantsFullScreen === true);
+                    $state.go('board.task', {
+                        slug: $scope.slug,
+                        sprintId: $scope.sprint.id,
+                        taskId: $scope.task.id,
+                        ev: ev
                     });
                 };
 

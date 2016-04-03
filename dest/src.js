@@ -1,30 +1,36 @@
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend', [
         'ngMaterial',
         'ui.router',
-        // 'ui.bootstrap',
         "dndLists",
         'ngResource',
         'ngCookies',
         'pascalprecht.translate',
-        // 'toastr',
-        // 'ui.select',
         'xeditable']);
 
-    app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider) {
+    app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider) {
         $stateProvider
-        .state('/', {
-            url: '/',
-            controller: 'HomeController',
-            templateUrl: 'app/home.tpl.html'
-        })
-        .state('/b/:slug', {
-            url: '/b/:slug',
-            controller: 'BoardController',
-            templateUrl: 'app/board.tpl.html'
-        });
+            .state('home', {
+                url: '/',
+                controller: 'HomeController',
+                templateUrl: 'app/home.tpl.html'
+            })
+            .state('board', {
+                url: '/b/:slug',
+                controller: 'BoardController',
+                templateUrl: 'app/board.tpl.html'
+            })
+            .state('board.task', {
+                url: '/tasks/{sprintId:[0-9]+}-:taskId',
+                params: {
+                    ev: null
+                },
+                onEnter: function ($stateParams, TaskService) {
+                    TaskService.showTaskModal($stateParams.slug, $stateParams.sprintId, $stateParams.taskId, $stateParams.ev);
+                }
+            });
 
         $urlRouterProvider.otherwise('/');
 
@@ -296,8 +302,7 @@
                         $scope.authenticated = false;
                         $location.path('/');
                         location.reload(true);
-                    }, function(response) {
-                        console.log(response);
+                    }, function() {
                         $scope.authenticated = false;
                         $location.path('/');
                         location.reload(true);
@@ -385,12 +390,12 @@
     }]);
 
 })();
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('task', ['$mdMedia', '$mdDialog', 'TaskService', function($mdMedia, $mdDialog, TaskService) {
+    app.directive('task', ['$state', '$mdMedia', '$mdDialog', 'TaskService', function ($state, $mdMedia, $mdDialog, TaskService) {
         return {
             restrict: 'E',
             templateUrl: 'app/task.tpl.html',
@@ -399,28 +404,14 @@
                 slug: '=slug',
                 sprint: '=sprint'
             },
-            link: function($scope) {
-
-                $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+            link: function ($scope) {
 
                 $scope.showTaskDetails = function (ev) {
-                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
-                    $mdDialog.show({
-                            controller: 'TaskDetailsModalController',
-                            templateUrl: 'app/modal/task-details-modal.tpl.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            clickOutsideToClose: true,
-                            fullscreen: useFullScreen,
-                            onRemoving: function () {
-                                updateTask($scope.task);
-                            },
-                            locals: {task: $scope.task, slug: $scope.slug, sprint: $scope.sprint.id}
-                        });
-                    $scope.$watch(function () {
-                        return $mdMedia('xs') || $mdMedia('sm');
-                    }, function (wantsFullScreen) {
-                        $scope.customFullscreen = (wantsFullScreen === true);
+                    $state.go('board.task', {
+                        slug: $scope.slug,
+                        sprintId: $scope.sprint.id,
+                        taskId: $scope.task.id,
+                        ev: ev
                     });
                 };
 
@@ -534,22 +525,28 @@
 
     }
 })();
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend');
 
     app.service('TaskService', TaskService);
 
-    function TaskService($http) {
+    function TaskService($state, $http, $mdMedia, $mdDialog) {
         var service = {};
 
+        service.getTask = getTask;
         service.getTasks = getTasks;
         service.createTask = createTask;
         service.updateTask = updateTask;
+        service.showTaskModal = showTaskModal;
         service.insertComment = insertComment;
 
         return service;
+
+        function getTask(slug, sprintId, taskId) {
+            return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + taskId)
+        }
 
         function getTasks(slug, sprintId) {
             return $http.get('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks')
@@ -565,6 +562,31 @@
 
         function insertComment(slug, sprintId, taskId, comment) {
             return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + taskId + '/comments', comment);
+        }
+
+        function showTaskModal(slug, sprintId, taskId, ev) {
+            var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
+            getTask(slug, sprintId, taskId).then(function (response) {
+                var task = response.data;
+                $mdDialog.show({
+                    controller: 'TaskDetailsModalController',
+                    templateUrl: 'app/modal/task-details-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen,
+                    onRemoving: function () {
+                        updateTask(slug, sprintId, task).then(function () {
+                            $state.transitionTo("board", {slug: slug});
+                        });
+                    },
+                    locals: {
+                        slug: slug,
+                        sprintId: sprintId,
+                        task: task
+                    }
+                });
+            });
         }
 
     }
@@ -609,7 +631,6 @@
             response.data.boardUserRole.forEach(function (user) {
                 $scope.users.push(user.user);
             });
-            console.log($scope.users);
         });
 
         $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];
@@ -648,12 +669,12 @@
         }
     });
 })();
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('TaskDetailsModalController', function ($scope, $mdDialog, TaskService, task, slug, sprint) {
+    app.controller('TaskDetailsModalController', function ($scope, $mdDialog, TaskService, slug, sprintId, task) {
 
         $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];
         $scope.dificultyList = ['_0', '_1', '_2', '_3', '_5', '_8', '_13', '_21', '_34', '_55', '_89'];
@@ -663,22 +684,19 @@
         $scope.comment = '';
 
         $scope.save = function () {
-            TaskService.updateTask(slug, sprint, $scope.task).then(function (response) {
+            TaskService.updateTask(slug, sprintId, $scope.task).then(function (response) {
                 $scope.task = response.data;
             });
         };
 
         $scope.insertComment = function () {
-            TaskService.insertComment(slug, sprint, $scope.task.id, $scope.comment).then(function (response) {
+            TaskService.insertComment(slug, sprintId, $scope.task.id, $scope.comment).then(function (response) {
                 $scope.task.comments.push(response.data);
                 $scope.comment = '';
             });
         };
 
-        $scope.hide = function() {
-            $mdDialog.hide($scope.task);
-        };
-        $scope.cancel = function() {
+        $scope.close = function () {
             $mdDialog.hide($scope.task);
         };
     });

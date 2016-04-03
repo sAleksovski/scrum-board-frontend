@@ -286,3 +286,11 @@ a {
 .social-google-plus:not([disabled]):hover  {
     background-color: #dc6e60 !important;
 }
+
+.task-list md-card {
+    margin: 8px 0 !important;
+}
+
+.task-list li {
+    margin: 8px !important;
+}

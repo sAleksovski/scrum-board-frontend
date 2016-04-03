@@ -1,30 +1,36 @@
-(function() {
+(function () {
     'use strict';
 
     var app = angular.module('scrum-board-frontend', [
         'ngMaterial',
         'ui.router',
-        // 'ui.bootstrap',
         "dndLists",
         'ngResource',
         'ngCookies',
         'pascalprecht.translate',
-        // 'toastr',
-        // 'ui.select',
         'xeditable']);
 
-    app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider) {
+    app.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider) {
         $stateProvider
-        .state('/', {
-            url: '/',
-            controller: 'HomeController',
-            templateUrl: 'app/home.tpl.html'
-        })
-        .state('/b/:slug', {
-            url: '/b/:slug',
-            controller: 'BoardController',
-            templateUrl: 'app/board.tpl.html'
-        });
+            .state('home', {
+                url: '/',
+                controller: 'HomeController',
+                templateUrl: 'app/home.tpl.html'
+            })
+            .state('board', {
+                url: '/b/:slug',
+                controller: 'BoardController',
+                templateUrl: 'app/board.tpl.html'
+            })
+            .state('board.task', {
+                url: '/tasks/{sprintId:[0-9]+}-:taskId',
+                params: {
+                    ev: null
+                },
+                onEnter: function ($stateParams, TaskService) {
+                    TaskService.showTaskModal($stateParams.slug, $stateParams.sprintId, $stateParams.taskId, $stateParams.ev);
+                }
+            });
 
         $urlRouterProvider.otherwise('/');
 
