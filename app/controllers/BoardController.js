@@ -3,12 +3,15 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('BoardController', function ($scope, $stateParams, $cookies, $mdDialog, $mdMedia, BoardService, SprintService, TaskService) {
+    app.controller('BoardController', function ($scope, $rootScope, $stateParams, $cookies, $mdDialog, $mdMedia, BoardService, SprintService, TaskService) {
 
         $scope.slug = $stateParams.slug;
 
+        $scope.showSettings = false;
+
         $scope.sprintChanged = sprintChanged;
         $scope.openAddSprintModal = openAddSprintModal;
+        $scope.openBoardSettingsModal = openBoardSettingsModal;
 
         $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
@@ -21,6 +24,7 @@
         };
 
         BoardService.getBoard($scope.slug).then(function (response) {
+            setBoardUserRole(response.data);
             var currentSprintId = getSelectedSprint();
             if (currentSprintId != -1) {
                 response.data.sprints.forEach(function (sprint) {
@@ -34,6 +38,16 @@
             $scope.board = response.data;
             $scope.currentSprint && $scope.sprintChanged();
         });
+
+        function setBoardUserRole(board) {
+            board.boardUserRole.forEach(function (bur) {
+                if (bur.user.id == $rootScope.currentUser.id) {
+                    if (bur.role == 'ROLE_ADMIN') {
+                        $scope.showSettings = true;
+                    }
+                }
+            });
+        }
 
         function sprintChanged() {
             saveSelectedSprint();
@@ -55,6 +69,26 @@
                 .then(function (sprint) {
                     createSprint(sprint);
                 }, function () {
+                });
+            $scope.$watch(function () {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function (wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
+            });
+        }
+        
+        function openBoardSettingsModal(ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+            $mdDialog.show({
+                    controller: 'SprintSettingsModalController',
+                    templateUrl: 'app/modal/sprint-settings-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        slug: $scope.slug
+                    }
                 });
             $scope.$watch(function () {
                 return $mdMedia('xs') || $mdMedia('sm');

@@ -3,7 +3,7 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('navbar', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+    app.directive('navbar', ['$location', '$rootScope', 'AuthService', function($location, $rootScope, AuthService) {
         return {
             restrict: 'EA',
             templateUrl: 'app/navbar.tpl.html',
@@ -14,27 +14,12 @@
 
                 });
 
-                $scope.user = {};
-
-                AuthService.getUser().then(function(response) {
-                    $scope.user.name = response.data.firstName + ' ' + response.data.lastName;
-                    $scope.user.profilePicture = response.data.imageUrl;
-                });
-
                 $scope.openMenu = function($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
 
                 $scope.logout = function() {
-                    AuthService.logout().then(function() {
-                        $scope.authenticated = false;
-                        $location.path('/');
-                        location.reload(true);
-                    }, function() {
-                        $scope.authenticated = false;
-                        $location.path('/');
-                        location.reload(true);
-                    });
+                    AuthService.logout();
                 };
             }
         }

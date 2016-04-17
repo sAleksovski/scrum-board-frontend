@@ -26,7 +26,7 @@
 
 <body ng-app="scrum-board-frontend" ng-cloak class="ng-cloak">
 
-<div class="app-container" ng-controller="AuthController" ng-show="show" layout="column">
+<div class="app-container" ng-controller="AuthController" ng-show="showapp" layout="column">
     <navbar ng-if="authenticated"></navbar>
     <div ng-show="authenticated" flex layout>
         <div ui-view ng-if="authenticated" flex layout></div>
@@ -37,8 +37,8 @@
 <!-- Concatenated libraries -->
 <script src="/dest/lib.js?rev=bb7f1b00b2c193eb80d87451fa1fee14"></script>
 <!-- Concatenated application -->
-<script src="/dest/src.js?rev=b673f1cb8160a3e5850ea72a3d48c4d1"></script>
+<script src="/dest/src.js?rev=f78ea317f8400dbfc67a659a74844894"></script>
 <!-- All html templates -->
-<script src="/dest/templates.js?rev=3c331b614aa853d83883ea84c78906ce"></script>
+<script src="/dest/templates.js?rev=3f4ecf60b60c26db24fa19eb74882d97"></script>
 </body>
 </html>

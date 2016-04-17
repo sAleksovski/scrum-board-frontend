@@ -71,6 +71,10 @@ body {
     margin-bottom: 30px !important;
 }
 
+.pull-right {
+    float: right;
+}
+
 /**
  * Navbar
  */

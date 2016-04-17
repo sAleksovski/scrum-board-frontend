@@ -1,0 +1,58 @@
+<md-dialog ng-cloak class="add-modal-dialog">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Settings</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div style="width: 400px;"></div>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout>
+                    <md-list flex>
+                        <md-subheader class="md-no-sticky">Users<span class="pull-right">Admin</span></md-subheader>
+                        <md-list-item ng-repeat="u in boardUserRole" class="noright">
+                            <img alt="{{ u.user.firstName }} {{ u.user.lastName }}" ng-src="{{ u.user.imageUrl }}" class="md-avatar" />
+                            <p>{{ u.user.firstName }} {{ u.user.lastName }}</p>
+                            <md-checkbox class="md-secondary" ng-change="roleChanged(u)" ng-model="u.isAdmin"></md-checkbox>
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <div layout>
+                    <md-autocomplete flex
+                                     md-selected-item="selectedItem"
+                                     md-selected-item-change="selectedItemChanged()"
+                                     md-search-text="searchText"
+                                     md-items="item in querySearch(searchText)"
+                                     md-item-text="item.firstName + ' ' + item.lastName"
+                                     md-min-length="3"
+                                     md-no-cache="true"
+                                     placeholder="Add users">
+                        <md-item-template>
+                            <div layout="row" layout-align="center">
+                                <img ng-src="{{item.imageUrl}}" style="border-radius: 50%; height: 32px; width: 32px; margin: 8px 8px 8px 0;" />
+                                <span md-highlight-text="searchText" flex md-highlight-flags="^i">{{item.firstName + ' ' + item.lastName}}</span>
+                            </div>
+                        </md-item-template>
+                        <md-not-found>
+                            No users matching "{{searchText}}" were found.
+                        </md-not-found>
+                    </md-autocomplete>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="add()">
+                Save
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

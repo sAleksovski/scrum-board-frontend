@@ -5,7 +5,7 @@
 
     app.service('AuthService', AuthService);
 
-    function AuthService($http) {
+    function AuthService($http, $rootScope, $location) {
         var service = {};
 
         service.getUser = getUser;
@@ -14,11 +14,19 @@
         return service;
 
         function getUser() {
-            return $http.get('/api/user');
+            return $http.get('/api/me');
         }
 
         function logout() {
-            return $http.post('/auth/logout');
+            $http.post('/auth/logout').then(function() {
+                $rootScope.authenticated = false;
+                $location.path('/');
+                location.reload(true);
+            }, function() {
+                $rootScope.authenticated = false;
+                $location.path('/');
+                location.reload(true);
+            });
         }
 
     }

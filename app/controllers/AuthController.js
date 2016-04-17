@@ -3,16 +3,18 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('AuthController', function($scope, $location, AuthService) {
-        $scope.authenticated = false;
-        $scope.show = false;
-        AuthService.getUser().then(function() {
-            $scope.authenticated = true;
-            $scope.show = true;
+    app.controller('AuthController', function($rootScope, $location, AuthService) {
+        $rootScope.authenticated = false;
+        $rootScope.showapp = false;
+        AuthService.getUser().then(function(response) {
+            $rootScope.currentUser = response.data;
+            $rootScope.authenticated = true;
+            $rootScope.showapp = true;
         }, function() {
-            $scope.authenticated = false;
+            $rootScope.currentUser = undefined;
+            $rootScope.authenticated = false;
             $location.path('/');
-            $scope.show = true;
+            $rootScope.showapp = true;
         });
     });
 })();

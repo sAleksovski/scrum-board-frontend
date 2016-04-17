@@ -48,175 +48,6 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.controller('AuthController', function($scope, $location, AuthService) {
-        $scope.authenticated = false;
-        $scope.show = false;
-        AuthService.getUser().then(function() {
-            $scope.authenticated = true;
-            $scope.show = true;
-        }, function() {
-            $scope.authenticated = false;
-            $location.path('/');
-            $scope.show = true;
-        });
-    });
-})();
-(function () {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.controller('BoardController', function ($scope, $stateParams, $cookies, $mdDialog, $mdMedia, BoardService, SprintService, TaskService) {
-
-        $scope.slug = $stateParams.slug;
-
-        $scope.sprintChanged = sprintChanged;
-        $scope.openAddSprintModal = openAddSprintModal;
-
-        $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
-
-        $scope.tasks = {
-            "TODO": [],
-            "IN_PROGRESS": [],
-            "TESTING": [],
-            "BLOCKED": [],
-            "DONE": []
-        };
-
-        BoardService.getBoard($scope.slug).then(function (response) {
-            var currentSprintId = getSelectedSprint();
-            if (currentSprintId != -1) {
-                response.data.sprints.forEach(function (sprint) {
-                    if (sprint.id === currentSprintId) {
-                        $scope.currentSprint = sprint;
-                    }
-                });
-            } else if (response.data.sprints.length > 0) {
-                $scope.currentSprint = response.data.sprints[0];
-            }
-            $scope.board = response.data;
-            $scope.currentSprint && $scope.sprintChanged();
-        });
-
-        function sprintChanged() {
-            saveSelectedSprint();
-            TaskService.getTasks($scope.slug, $scope.currentSprint.id).then(function (response) {
-                addTasksToModel(response.data);
-            });
-        }
-
-        function openAddSprintModal(ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
-            $mdDialog.show({
-                    controller: 'SprintAddModalController',
-                    templateUrl: 'app/modal/sprint-add-modal.tpl.html',
-                    parent: angular.element(document.body),
-                    targetEvent: ev,
-                    clickOutsideToClose: true,
-                    fullscreen: useFullScreen
-                })
-                .then(function (sprint) {
-                    createSprint(sprint);
-                }, function () {
-                });
-            $scope.$watch(function () {
-                return $mdMedia('xs') || $mdMedia('sm');
-            }, function (wantsFullScreen) {
-                $scope.customFullscreen = (wantsFullScreen === true);
-            });
-        }
-
-        function createSprint(sprint) {
-            SprintService.addSprint($scope.slug, sprint).then(function (response) {
-                $scope.board.sprints.push(response.data);
-                $scope.currentSprint = response.data;
-                $scope.sprintChanged();
-            });
-        }
-
-        function addTasksToModel(tasks) {
-            $scope.tasks = {
-                "TODO": [],
-                "IN_PROGRESS": [],
-                "TESTING": [],
-                "BLOCKED": [],
-                "DONE": []
-            };
-            tasks.forEach(function (task) {
-                $scope.tasks[task.progress].push(task);
-            })
-        }
-
-        function getSelectedSprint() {
-            var boardToSprint = $cookies.get('bts') || '{}';
-            boardToSprint = JSON.parse(boardToSprint);
-            if (boardToSprint[$scope.slug]) {
-                return boardToSprint[$scope.slug];
-            }
-            return -1;
-        }
-
-        function saveSelectedSprint() {
-            var boardToSprint = $cookies.get('bts') || '{}';
-            boardToSprint = JSON.parse(boardToSprint);
-            boardToSprint[$scope.slug] = $scope.currentSprint.id;
-            boardToSprint = JSON.stringify(boardToSprint);
-            $cookies.put('bts', boardToSprint);
-        }
-
-    });
-})();
-(function () {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
-    app.controller('HomeController', function ($scope, BoardService) {
-
-        function init() {
-            BoardService.getBoards().then(function (response) {
-                $scope.boards = response.data;
-            });
-        }
-
-        init();
-
-        $scope.showForm = false;
-        $scope.data = {};
-
-        $scope.showAdd = function () {
-            $scope.showForm = true;
-        };
-
-        $scope.onBlur = function () {
-            $scope.showForm = false;
-            $scope.data.name = '';
-        };
-
-        $scope.keyDown = function (event) {
-            if (event.keyCode == 27) {
-                $scope.showForm = false;
-                $scope.data.name = '';
-            }
-            if (event.keyCode == 13) {
-                $scope.showForm = false;
-                addBoard();
-            }
-        };
-
-        function addBoard() {
-            BoardService.addBoard($scope.data.name).then(function (response) {
-                $scope.boards.push(response.data);
-                $scope.data.name = '';
-            });
-        }
-    });
-})();
-(function() {
-    'use strict';
-
-    var app = angular.module('scrum-board-frontend');
-
     app.directive('enterSubmit', function () {
         return {
             restrict: 'A',
@@ -275,7 +106,7 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('navbar', ['$location', '$rootScope', '$http', 'AuthService', function($location, $rootScope, $http, AuthService) {
+    app.directive('navbar', ['$location', '$rootScope', 'AuthService', function($location, $rootScope, AuthService) {
         return {
             restrict: 'EA',
             templateUrl: 'app/navbar.tpl.html',
@@ -286,27 +117,12 @@
 
                 });
 
-                $scope.user = {};
-
-                AuthService.getUser().then(function(response) {
-                    $scope.user.name = response.data.firstName + ' ' + response.data.lastName;
-                    $scope.user.profilePicture = response.data.imageUrl;
-                });
-
                 $scope.openMenu = function($mdOpenMenu, ev) {
                     $mdOpenMenu(ev);
                 };
 
                 $scope.logout = function() {
-                    AuthService.logout().then(function() {
-                        $scope.authenticated = false;
-                        $location.path('/');
-                        location.reload(true);
-                    }, function() {
-                        $scope.authenticated = false;
-                        $location.path('/');
-                        location.reload(true);
-                    });
+                    AuthService.logout();
                 };
             }
         }
@@ -453,9 +269,214 @@
 
     var app = angular.module('scrum-board-frontend');
 
+    app.controller('AuthController', function($rootScope, $location, AuthService) {
+        $rootScope.authenticated = false;
+        $rootScope.showapp = false;
+        AuthService.getUser().then(function(response) {
+            $rootScope.currentUser = response.data;
+            $rootScope.authenticated = true;
+            $rootScope.showapp = true;
+        }, function() {
+            $rootScope.currentUser = undefined;
+            $rootScope.authenticated = false;
+            $location.path('/');
+            $rootScope.showapp = true;
+        });
+    });
+})();
+(function () {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.controller('BoardController', function ($scope, $rootScope, $stateParams, $cookies, $mdDialog, $mdMedia, BoardService, SprintService, TaskService) {
+
+        $scope.slug = $stateParams.slug;
+
+        $scope.showSettings = false;
+
+        $scope.sprintChanged = sprintChanged;
+        $scope.openAddSprintModal = openAddSprintModal;
+        $scope.openBoardSettingsModal = openBoardSettingsModal;
+
+        $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+
+        $scope.tasks = {
+            "TODO": [],
+            "IN_PROGRESS": [],
+            "TESTING": [],
+            "BLOCKED": [],
+            "DONE": []
+        };
+
+        BoardService.getBoard($scope.slug).then(function (response) {
+            setBoardUserRole(response.data);
+            var currentSprintId = getSelectedSprint();
+            if (currentSprintId != -1) {
+                response.data.sprints.forEach(function (sprint) {
+                    if (sprint.id === currentSprintId) {
+                        $scope.currentSprint = sprint;
+                    }
+                });
+            } else if (response.data.sprints.length > 0) {
+                $scope.currentSprint = response.data.sprints[0];
+            }
+            $scope.board = response.data;
+            $scope.currentSprint && $scope.sprintChanged();
+        });
+
+        function setBoardUserRole(board) {
+            board.boardUserRole.forEach(function (bur) {
+                if (bur.user.id == $rootScope.currentUser.id) {
+                    if (bur.role == 'ROLE_ADMIN') {
+                        $scope.showSettings = true;
+                    }
+                }
+            });
+        }
+
+        function sprintChanged() {
+            saveSelectedSprint();
+            TaskService.getTasks($scope.slug, $scope.currentSprint.id).then(function (response) {
+                addTasksToModel(response.data);
+            });
+        }
+
+        function openAddSprintModal(ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+            $mdDialog.show({
+                    controller: 'SprintAddModalController',
+                    templateUrl: 'app/modal/sprint-add-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen
+                })
+                .then(function (sprint) {
+                    createSprint(sprint);
+                }, function () {
+                });
+            $scope.$watch(function () {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function (wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
+            });
+        }
+        
+        function openBoardSettingsModal(ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+            $mdDialog.show({
+                    controller: 'SprintSettingsModalController',
+                    templateUrl: 'app/modal/sprint-settings-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        slug: $scope.slug
+                    }
+                });
+            $scope.$watch(function () {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function (wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
+            });
+        }
+
+        function createSprint(sprint) {
+            SprintService.addSprint($scope.slug, sprint).then(function (response) {
+                $scope.board.sprints.push(response.data);
+                $scope.currentSprint = response.data;
+                $scope.sprintChanged();
+            });
+        }
+
+        function addTasksToModel(tasks) {
+            $scope.tasks = {
+                "TODO": [],
+                "IN_PROGRESS": [],
+                "TESTING": [],
+                "BLOCKED": [],
+                "DONE": []
+            };
+            tasks.forEach(function (task) {
+                $scope.tasks[task.progress].push(task);
+            })
+        }
+
+        function getSelectedSprint() {
+            var boardToSprint = $cookies.get('bts') || '{}';
+            boardToSprint = JSON.parse(boardToSprint);
+            if (boardToSprint[$scope.slug]) {
+                return boardToSprint[$scope.slug];
+            }
+            return -1;
+        }
+
+        function saveSelectedSprint() {
+            var boardToSprint = $cookies.get('bts') || '{}';
+            boardToSprint = JSON.parse(boardToSprint);
+            boardToSprint[$scope.slug] = $scope.currentSprint.id;
+            boardToSprint = JSON.stringify(boardToSprint);
+            $cookies.put('bts', boardToSprint);
+        }
+
+    });
+})();
+(function () {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.controller('HomeController', function ($scope, BoardService) {
+
+        function init() {
+            BoardService.getBoards().then(function (response) {
+                $scope.boards = response.data;
+            });
+        }
+
+        init();
+
+        $scope.showForm = false;
+        $scope.data = {};
+
+        $scope.showAdd = function () {
+            $scope.showForm = true;
+        };
+
+        $scope.onBlur = function () {
+            $scope.showForm = false;
+            $scope.data.name = '';
+        };
+
+        $scope.keyDown = function (event) {
+            if (event.keyCode == 27) {
+                $scope.showForm = false;
+                $scope.data.name = '';
+            }
+            if (event.keyCode == 13) {
+                $scope.showForm = false;
+                addBoard();
+            }
+        };
+
+        function addBoard() {
+            BoardService.addBoard($scope.data.name).then(function (response) {
+                $scope.boards.push(response.data);
+                $scope.data.name = '';
+            });
+        }
+    });
+})();
+(function() {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
     app.service('AuthService', AuthService);
 
-    function AuthService($http) {
+    function AuthService($http, $rootScope, $location) {
         var service = {};
 
         service.getUser = getUser;
@@ -464,11 +485,19 @@
         return service;
 
         function getUser() {
-            return $http.get('/api/user');
+            return $http.get('/api/me');
         }
 
         function logout() {
-            return $http.post('/auth/logout');
+            $http.post('/auth/logout').then(function() {
+                $rootScope.authenticated = false;
+                $location.path('/');
+                location.reload(true);
+            }, function() {
+                $rootScope.authenticated = false;
+                $location.path('/');
+                location.reload(true);
+            });
         }
 
     }
@@ -486,6 +515,9 @@
         service.getBoards = getBoards;
         service.getBoard = getBoard;
         service.addBoard = addBoard;
+        service.addUser = addUser;
+        service.updateUser = updateUser;
+        service.searchUsers = searchUsers;
 
         return service;
 
@@ -499,6 +531,18 @@
 
         function addBoard(name) {
             return $http.post('/api/boards', name);
+        }
+        
+        function addUser(slug, user) {
+            return $http.post('/api/boards/' + slug + '/users', user);
+        }
+
+        function updateUser(slug, bur) {
+            return $http.put('/api/boards/' + slug + '/users', bur);
+        }
+
+        function searchUsers(query) {
+            return $http.get('/api/users?query=' + query);
         }
 
     }
@@ -615,6 +659,81 @@
                 return;
             }
             $mdDialog.hide($scope.sprint);
+        };
+    });
+})();
+(function () {
+    'use strict';
+
+    var app = angular.module('scrum-board-frontend');
+
+    app.controller('SprintSettingsModalController', function ($scope, $mdDialog, $http, $q, BoardService, slug) {
+
+        $scope.sprint = {};
+        $scope.idsToIgnore = [];
+
+        $scope.hide = function () {
+            $mdDialog.hide();
+        };
+        $scope.close = function () {
+            $mdDialog.cancel();
+        };
+
+        BoardService.getBoard(slug).then(function (response) {
+            $scope.boardUserRole = parseBoardUserRole(response.data.boardUserRole);
+            setIdsToIgnore();
+        });
+
+        $scope.selectedItemChanged = function () {
+            if ($scope.selectedItem) {
+                BoardService.addUser(slug, $scope.selectedItem).then(function (response) {
+                    $scope.boardUserRole = parseBoardUserRole(response.data);
+                    $scope.searchText = '';
+                    setIdsToIgnore();
+                });
+            }
+        };
+
+        $scope.querySearch = function (query) {
+            var deferred = $q.defer();
+            BoardService.searchUsers(query).then(function (response) {
+                var users = response.data.filter(function (u) {
+                    return $scope.idsToIgnore.indexOf(u.id) === -1;
+                });
+                return deferred.resolve(users);
+            });
+            return deferred.promise;
+        };
+
+        $scope.roleChanged = function (bur) {
+            bur.role = bur.role === 'ROLE_ADMIN' ? 'ROLE_USER' : 'ROLE_ADMIN';
+            BoardService.updateUser(slug, bur).then(function (response) {
+                $scope.boardUserRole = parseBoardUserRole(response.data);
+                $scope.searchText = '';
+                setIdsToIgnore();
+            });
+        };
+
+        function setIdsToIgnore() {
+            var idsToIgnore = [];
+            $scope.boardUserRole.forEach(function (bur) {
+                idsToIgnore.push(bur.user.id);
+            });
+            $scope.idsToIgnore = idsToIgnore;
+        }
+
+        function parseBoardUserRole(bur) {
+            bur.forEach(function (b) {
+                b.isAdmin = b.role === 'ROLE_ADMIN';
+            });
+            return bur;
+        }
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+        $scope.add = function () {
+            $mdDialog.hide();
         };
     });
 })();

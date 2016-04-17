@@ -11,6 +11,9 @@
         service.getBoards = getBoards;
         service.getBoard = getBoard;
         service.addBoard = addBoard;
+        service.addUser = addUser;
+        service.updateUser = updateUser;
+        service.searchUsers = searchUsers;
 
         return service;
 
@@ -24,6 +27,18 @@
 
         function addBoard(name) {
             return $http.post('/api/boards', name);
+        }
+        
+        function addUser(slug, user) {
+            return $http.post('/api/boards/' + slug + '/users', user);
+        }
+
+        function updateUser(slug, bur) {
+            return $http.put('/api/boards/' + slug + '/users', bur);
+        }
+
+        function searchUsers(query) {
+            return $http.get('/api/users?query=' + query);
         }
 
     }

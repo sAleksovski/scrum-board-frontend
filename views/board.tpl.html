@@ -12,7 +12,7 @@
                 <md-icon>add</md-icon>
             </md-button>
             <span flex></span>
-            <md-button ng-click="openAddSprintModal()" class="md-icon-button">
+            <md-button ng-if="showSettings" ng-click="openBoardSettingsModal($event)" class="md-icon-button">
                 <md-icon>settings</md-icon>
             </md-button>
         </div>
