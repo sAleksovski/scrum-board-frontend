@@ -25,6 +25,7 @@
 
         BoardService.getBoard($scope.slug).then(function (response) {
             setBoardUserRole(response.data);
+            $scope.board = response.data;
             var currentSprintId = getSelectedSprint();
             if (currentSprintId != -1) {
                 response.data.sprints.forEach(function (sprint) {
@@ -34,8 +35,9 @@
                 });
             } else if (response.data.sprints.length > 0) {
                 $scope.currentSprint = response.data.sprints[0];
+            } else {
+                openAddSprintModal();
             }
-            $scope.board = response.data;
             $scope.currentSprint && $scope.sprintChanged();
         });
 
@@ -69,6 +71,9 @@
                 .then(function (sprint) {
                     createSprint(sprint);
                 }, function () {
+                    if ($scope.board.sprints.length == 0) {
+                        openAddSprintModal();
+                    }
                 });
             $scope.$watch(function () {
                 return $mdMedia('xs') || $mdMedia('sm');

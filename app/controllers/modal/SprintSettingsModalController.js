@@ -15,17 +15,19 @@
             $mdDialog.cancel();
         };
 
-        BoardService.getBoard(slug).then(function (response) {
-            $scope.boardUserRole = parseBoardUserRole(response.data.boardUserRole);
-            setIdsToIgnore();
-        });
+        function init() {
+            $scope.searchText = '';
+            BoardService.getBoard(slug).then(function (response) {
+                $scope.boardUserRole = parseBoardUserRole(response.data.boardUserRole);
+                setIdsToIgnore();
+            });
+        }
+        init();
 
         $scope.selectedItemChanged = function () {
             if ($scope.selectedItem) {
-                BoardService.addUser(slug, $scope.selectedItem).then(function (response) {
-                    $scope.boardUserRole = parseBoardUserRole(response.data);
-                    $scope.searchText = '';
-                    setIdsToIgnore();
+                BoardService.addUser(slug, $scope.selectedItem).then(function () {
+                    init();
                 });
             }
         };
@@ -43,10 +45,8 @@
 
         $scope.roleChanged = function (bur) {
             bur.role = bur.role === 'ROLE_ADMIN' ? 'ROLE_USER' : 'ROLE_ADMIN';
-            BoardService.updateUser(slug, bur).then(function (response) {
-                $scope.boardUserRole = parseBoardUserRole(response.data);
-                $scope.searchText = '';
-                setIdsToIgnore();
+            BoardService.updateUser(slug, bur).then(function () {
+                init();
             });
         };
 

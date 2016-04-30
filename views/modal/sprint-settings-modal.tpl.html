@@ -34,7 +34,7 @@
                                      placeholder="Add users">
                         <md-item-template>
                             <div layout="row" layout-align="center">
-                                <img ng-src="{{item.imageUrl}}" style="border-radius: 50%; height: 32px; width: 32px; margin: 8px 8px 8px 0;" />
+                                <img ng-src="{{item.imageUrl}}" class="autocomplete-user-image" />
                                 <span md-highlight-text="searchText" flex md-highlight-flags="^i">{{item.firstName + ' ' + item.lastName}}</span>
                             </div>
                         </md-item-template>

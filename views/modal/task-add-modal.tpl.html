@@ -29,14 +29,14 @@
                 <div layout layout-margin>
                     <md-input-container flex>
                         <label>Task progress</label>
-                        <md-select ng-model="task.progress">
+                        <md-select ng-model="task.progress" ng-disabled="true">
                             <md-option ng-repeat="tp in progressList" ng-value="tp">{{tp | capitalize}}</md-option>
                         </md-select>
                     </md-input-container>
                     <md-input-container flex>
                         <label>Task difficulty</label>
                         <md-select ng-model="task.difficulty">
-                            <md-option ng-repeat="td in dificultyList" ng-value="td">{{td | capitalize}}</md-option>
+                            <md-option ng-repeat="td in difficultyList" ng-value="td">{{td | capitalize}}</md-option>
                         </md-select>
                     </md-input-container>
                     <md-input-container flex>
@@ -55,15 +55,15 @@
                             md-min-length="0"
                             placeholder="Assign task">
                         <md-item-template>
-                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.firstName + ' ' + item.lastName}}</span>
+                            <div layout="row" layout-align="center">
+                                <img ng-src="{{item.imageUrl}}" class="autocomplete-user-image" />
+                                <span md-highlight-text="searchText" flex md-highlight-flags="^i">{{item.firstName + ' ' + item.lastName}}</span>
+                            </div>
                         </md-item-template>
                         <md-not-found>
                             No users matching "{{searchText}}" were found.
                         </md-not-found>
                     </md-autocomplete>
-                </div>
-                <div layout="row" layout-align="center center" ng-show="error">
-                    <div class="form-error">{{ error }}</div>
                 </div>
             </div>
         </md-dialog-content>

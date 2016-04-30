@@ -14,11 +14,13 @@
         });
 
         $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];
-        $scope.dificultyList = ['_0', '_1', '_2', '_3', '_5', '_8', '_13', '_21', '_34', '_55', '_89'];
+        $scope.difficultyList = ['_0', '_1', '_2', '_3', '_5', '_8', '_13', '_21', '_34', '_55', '_89'];
         $scope.priorityList = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
 
         $scope.task = {};
         $scope.task.progress = zone;
+        $scope.task.difficulty = $scope.difficultyList[1];
+        $scope.task.priority = $scope.priorityList[1];
 
         $scope.hide = function () {
             $mdDialog.hide();
