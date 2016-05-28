@@ -317,3 +317,23 @@ a {
     color: #f36;
     font-weight: bold;
 }
+
+.notif-count::after {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
+    content: attr(data-count);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    border-radius: 50%;
+    background: #ff4081;
+    color: #fff;
+}

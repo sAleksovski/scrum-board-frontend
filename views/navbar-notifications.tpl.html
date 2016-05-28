@@ -1,0 +1,10 @@
+<md-menu md-offset="0 52">
+    <md-button aria-label="Open notifications" ng-class="{'md-icon-button': true, 'notif-count': countUnread() > 0}" data-count="{{notifications.length < 10 ? notifications.length : '9+'}}" ng-click="$mdOpenMenu($event)">
+        <md-icon>notifications</md-icon>
+    </md-button>
+    <md-menu-content width="4">
+        <md-menu-item ng-repeat="n in notifications">
+            {{n.content}}
+        </md-menu-item>
+    </md-menu-content>
+</md-menu>

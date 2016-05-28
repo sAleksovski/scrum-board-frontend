@@ -27,7 +27,9 @@ var JS_LIB = [
     'bower_components/angular-aria/angular-aria.js',
     'bower_components/angular-animate/angular-animate.js',
     'bower_components/angular-material/angular-material.js',
-    'bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
+    'bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js',
+    'bower_components/sockjs/sockjs.js',
+    'bower_components/stomp-websocket/lib/stomp.js'
 ];
 
 var JS_APP = [

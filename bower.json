@@ -17,7 +17,9 @@
     "momentjs": "~2.11.2",
     "angular-xeditable": "~0.1.9",
     "angular-drag-and-drop-lists": "~1.4.0",
-    "angular-material": "^1.0.6"
+    "angular-material": "^1.0.6",
+    "sockjs": "~0.3.4",
+    "stomp-websocket": "~2.3.4"
   },
   "resolutions": {
     "angular": "~1.5.0"
