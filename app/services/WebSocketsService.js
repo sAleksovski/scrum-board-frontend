@@ -9,7 +9,7 @@
         
         var service = {};
 
-        var host = "http://localhost:8080";
+        var host = "$$BACKEND$$";
 
         service.URL = host + "/api/ws";
 

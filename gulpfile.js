@@ -3,6 +3,8 @@ var concat = require('gulp-concat');
 var templateCache = require('gulp-angular-templatecache');
 var rev = require('gulp-rev-append');
 var connect = require('gulp-connect');
+var replace = require('gulp-replace');
+var argv = require('yargs').argv;
 var fs = require("fs");
 
 
@@ -53,8 +55,11 @@ var MODULE_NAME = 'scrum-board-frontend';
 /**
 * The URL of the back-end API
 */
-var API_URL = 'http://localhost:8080/api';
-var LOGIN_URL = 'http://localhost:8080/auth';
+
+var BACKEND = argv.backend || 'http://localhost:8080';
+
+var API_URL = BACKEND + '/api';
+var LOGIN_URL = BACKEND + '/auth';
 /**
 * Route to which the API calls will be mapped 
 */
@@ -88,6 +93,7 @@ gulp.task('concat_css_lib', function () {
 gulp.task('concat_js_app', function () {
     return gulp.src(JS_APP)
         .pipe(concat('src.js'))
+        .pipe(replace('$$BACKEND$$', BACKEND))
         .pipe(gulp.dest(DESTINATION))
 });
 
@@ -146,8 +152,8 @@ gulp.task('watch', function () {
 
 gulp.task('serve', function () {
     connect.server({
-        port: 8000,
-        livereload: true,
+        port: argv.port || 8000,
+        livereload: argv.livereload || true,
         middleware: function (connect, opt) {
             return [
                 (function () {
