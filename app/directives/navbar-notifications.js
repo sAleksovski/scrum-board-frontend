@@ -3,7 +3,7 @@
 
     var app = angular.module('scrum-board-frontend');
 
-    app.directive('navbarNotifications', ['$rootScope', 'WebSocketsService', function($rootScope, WebSocketsService) {
+    app.directive('navbarNotifications', ['$rootScope', 'WebSocketsService', '$http', function($rootScope, WebSocketsService, $http) {
         return {
             restrict: 'EA',
             templateUrl: 'app/navbar-notifications.tpl.html',
@@ -12,6 +12,10 @@
                 WebSocketsService.connect();
 
                 $scope.notifications = [];
+
+                $http.get('/api/notifications').then(function (response) {
+                    $scope.notifications = $scope.notifications.concat(response.data);
+                });
 
                 WebSocketsService.receive().then(null, null, function(message) {
                     $scope.notifications.push(message);
@@ -27,7 +31,7 @@
 
                 $scope.countUnread = function () {
                     return $scope.notifications.filter(function (n) {
-                        return n.read == "false";
+                        return n.unread == true;
                     }).length;
                 }
             }
