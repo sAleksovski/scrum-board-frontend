@@ -153,7 +153,7 @@ gulp.task('watch', function () {
 gulp.task('serve', function () {
     connect.server({
         port: argv.port || 8000,
-        livereload: argv.livereload || true,
+        livereload: typeof argv.livereload === 'undefined' || argv.livereload === 'true',
         middleware: function (connect, opt) {
             return [
                 (function () {
