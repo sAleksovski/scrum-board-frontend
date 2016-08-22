@@ -4,7 +4,9 @@
     </md-button>
     <md-menu-content width="4">
         <md-menu-item ng-repeat="n in notifications">
-            {{n.notificationType}}
+            <md-button ng-href="{{n.url}}" aria-label="Do something">
+                {{getNotificationText(n)}}
+            </md-button>
         </md-menu-item>
     </md-menu-content>
 </md-menu>
