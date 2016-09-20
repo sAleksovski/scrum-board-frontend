@@ -10,6 +10,7 @@
         $scope.showSettings = false;
 
         $scope.sprintChanged = sprintChanged;
+        $scope.openAddTaskModal = openAddTaskModal;
         $scope.openAddSprintModal = openAddSprintModal;
         $scope.openBoardSettingsModal = openBoardSettingsModal;
 
@@ -79,6 +80,34 @@
                 return $mdMedia('xs') || $mdMedia('sm');
             }, function (wantsFullScreen) {
                 $scope.customFullscreen = (wantsFullScreen === true);
+            });
+        }
+
+        function openAddTaskModal (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+            $mdDialog.show({
+                    controller: 'TaskAddModalController',
+                    templateUrl: 'app/modal/task-add-modal.tpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen,
+                    locals: {zone: 'TODO', slug: $scope.slug}
+                })
+                .then(function (task) {
+                    createTask(task);
+                }, function () {
+                });
+            $scope.$watch(function () {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function (wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
+            });
+        }
+
+        function createTask(task) {
+            TaskService.createTask($scope.slug, $scope.currentSprint.id, task).then(function (response) {
+                $scope.tasks.TODO.push(response.data);
             });
         }
         

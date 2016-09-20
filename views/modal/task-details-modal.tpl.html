@@ -36,19 +36,13 @@
                     </md-content>
                 </div>
                 <div flex=33 layout="column">
-                    <md-input-container flex class="mb30">
-                        <label>Task progress</label>
-                        <md-select ng-model="task.progress" ng-change="save()">
-                            <md-option ng-repeat="tp in progressList" ng-value="tp">{{tp | capitalize}}</md-option>
-                        </md-select>
-                    </md-input-container>
-                    <md-input-container flex class="mb30">
+                    <md-input-container class="mb30">
                         <label>Task difficulty</label>
                         <md-select ng-model="task.difficulty" ng-change="save()">
                             <md-option ng-repeat="td in dificultyList" ng-value="td">{{td | capitalize}}</md-option>
                         </md-select>
                     </md-input-container>
-                    <md-input-container flex class="mb30">
+                    <md-input-container class="mb30">
                         <label>Task priority</label>
                         <md-select ng-model="task.priority" ng-change="save()">
                             <md-option ng-repeat="tp in priorityList" ng-value="tp">{{tp | capitalize}}</md-option>

@@ -19,7 +19,8 @@
                         slug: $scope.slug,
                         sprintId: $scope.sprint.id,
                         taskId: $scope.task.id,
-                        ev: ev
+                        ev: ev,
+                        originalTask: $scope.task
                     });
                 };
 

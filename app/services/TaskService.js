@@ -37,7 +37,7 @@
             return $http.post('/api/boards/' + slug + '/sprints/' + sprintId + '/tasks/' + taskId + '/comments', comment);
         }
 
-        function showTaskModal(slug, sprintId, taskId, ev) {
+        function showTaskModal(slug, sprintId, taskId, ev, originalTask) {
             var useFullScreen = $mdMedia('sm') || $mdMedia('xs');
             getTask(slug, sprintId, taskId).then(function (response) {
                 var task = response.data;
@@ -50,13 +50,17 @@
                     fullscreen: useFullScreen,
                     onRemoving: function () {
                         updateTask(slug, sprintId, task).then(function () {
+                            if (originalTask) {
+                                Object.assign(originalTask, task);
+                            }
                             $state.transitionTo("board", {slug: slug});
                         });
                     },
                     locals: {
                         slug: slug,
                         sprintId: sprintId,
-                        task: task
+                        task: task,
+                        originalTask: originalTask
                     }
                 });
             });

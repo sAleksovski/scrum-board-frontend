@@ -8,8 +8,11 @@
                     <md-option ng-repeat="b in board.sprints" ng-value="b">{{b.name}}</md-option>
                 </md-select>
             </md-input-container>
-            <md-button ng-click="openAddSprintModal($event)" class="md-icon-button">
-                <md-icon>add</md-icon>
+            <md-button ng-click="openAddSprintModal($event)" class="md-raised md-primary">
+                Add sprint
+            </md-button>
+            <md-button ng-click=openAddTaskModal($event) class="md-raised md-accent">
+                Add task
             </md-button>
             <span flex></span>
             <md-button ng-if="showSettings" ng-click="openBoardSettingsModal($event)" class="md-icon-button">

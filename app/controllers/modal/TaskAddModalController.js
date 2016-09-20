@@ -13,7 +13,6 @@
             });
         });
 
-        $scope.progressList = ['TODO', 'IN_PROGRESS', 'TESTING', 'BLOCKED', 'DONE'];
         $scope.difficultyList = ['_0', '_1', '_2', '_3', '_5', '_8', '_13', '_21', '_34', '_55', '_89'];
         $scope.priorityList = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
 

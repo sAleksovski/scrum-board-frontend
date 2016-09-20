@@ -25,10 +25,11 @@
             .state('board.task', {
                 url: '/tasks/{sprintId:[0-9]+}-:taskId',
                 params: {
-                    ev: null
+                    ev: null,
+                    originalTask: null
                 },
                 onEnter: function ($stateParams, TaskService) {
-                    TaskService.showTaskModal($stateParams.slug, $stateParams.sprintId, $stateParams.taskId, $stateParams.ev);
+                    TaskService.showTaskModal($stateParams.slug, $stateParams.sprintId, $stateParams.taskId, $stateParams.ev, $stateParams.originalTask);
                 }
             });
 

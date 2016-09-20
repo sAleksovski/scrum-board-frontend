@@ -89,7 +89,8 @@ body {
 }
 
 .img-navbar {
-    max-height: 22px;
+    max-height: 32px;
+    border-radius: 50%;
     margin: 0 5px;
     display: inline-block;
 }
@@ -97,9 +98,9 @@ body {
 .board-navbar {
     color: black !important;
     background-color: #f8f8f8 !important;
-    height: 32px !important;
-    max-height: 32px !important;
-    min-height: 32px !important;
+    height: 48px !important;
+    max-height: 48px !important;
+    min-height: 48px !important;
 }
 
 .board-navbar md-icon {
@@ -168,14 +169,20 @@ md-list[dnd-list] {
     overflow-x: auto;
     white-space: nowrap;
     margin-top: 10px;
+    padding: 0 5px;
+}
+
+task-list {
+    min-width: 285px;
+    width: 20%;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .task-list {
     background-color: #e2e4e6;
-    margin-right: 5px;
-    margin-left: 10px;
     overflow: hidden;
-    width: 285px;
+    width: 100%;
 }
 
 .task-list md-toolbar {
@@ -207,6 +214,10 @@ a {
 
 .form-error {
     color: red;
+}
+
+.add-modal-dialog {
+    min-width: 500px;
 }
 
 .add-modal-dialog md-input-container {

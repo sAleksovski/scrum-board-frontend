@@ -43,33 +43,6 @@
                     return task;
                 };
 
-                $scope.openAddTaskModal = function (ev, zone) {
-                    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
-                    $mdDialog.show({
-                            controller: 'TaskAddModalController',
-                            templateUrl: 'app/modal/task-add-modal.tpl.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            clickOutsideToClose: true,
-                            fullscreen: useFullScreen,
-                            locals: {zone: zone, slug: $scope.slug}
-                        })
-                        .then(function (task) {
-                            createTask(task);
-                        }, function () {
-                        });
-                    $scope.$watch(function () {
-                        return $mdMedia('xs') || $mdMedia('sm');
-                    }, function (wantsFullScreen) {
-                        $scope.customFullscreen = (wantsFullScreen === true);
-                    });
-                };
-
-                function createTask(task) {
-                    TaskService.createTask($scope.slug, $scope.sprint.id, task).then(function (response) {
-                        $scope.list.push(response.data);
-                    });
-                }
             }
         }
     }]);
