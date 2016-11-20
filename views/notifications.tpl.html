@@ -1,0 +1,17 @@
+<md-content layout="row" layout-align="center" flex>
+	<md-list class="md-dense">
+		<md-subheader class="md-no-sticky">Notifications</md-subheader>
+		<md-list-item class="md-2-line" ng-repeat="n in notifications" ng-href="{{n.url}}">
+			<img ng-src="{{n.creators[0].imageUrl}}" class="md-avatar" alt="{{n.creators[0].firstname}}" />
+			<div class="md-list-item-text" layout="column">
+				<h3>{{ n.creators[0].firstName }} {{ n.creators[0].lastName }}</h3>
+				<p>{{ getNotificationText(n) }}</p>
+			</div>
+		</md-list-item>
+		<md-list-item class="md-1-line" ng-click="getNotifications()" ng-if="showMoreButton">
+			<div class="md-list-item-text" layout="column">
+				<p>Show more</p>
+			</div>
+		</md-list-item>
+	</md-list>
+</md-content>

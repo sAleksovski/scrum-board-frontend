@@ -31,6 +31,11 @@
                 onEnter: function ($stateParams, TaskService) {
                     TaskService.showTaskModal($stateParams.slug, $stateParams.sprintId, $stateParams.taskId, $stateParams.ev, $stateParams.originalTask);
                 }
+            })
+            .state('notifications', {
+                url: '/notifications',
+                controller: 'NotificationsController',
+                templateUrl: 'app/notifications.tpl.html'
             });
 
         $urlRouterProvider.otherwise('/');

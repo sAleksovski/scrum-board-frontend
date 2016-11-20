@@ -13,6 +13,7 @@
         service.addBoard = addBoard;
         service.addUser = addUser;
         service.updateUser = updateUser;
+        service.deleteUser = deleteUser;
         service.searchUsers = searchUsers;
 
         return service;
@@ -35,6 +36,10 @@
 
         function updateUser(slug, bur) {
             return $http.put('/api/boards/' + slug + '/users', bur);
+        }
+
+        function deleteUser(slug, bur) {
+            return $http.delete('/api/boards/' + slug + '/users/' + bur);
         }
 
         function searchUsers(query) {

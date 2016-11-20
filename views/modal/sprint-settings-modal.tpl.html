@@ -1,4 +1,4 @@
-<md-dialog ng-cloak class="add-modal-dialog">
+<md-dialog class="add-modal-dialog">
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -14,11 +14,15 @@
             <div class="md-dialog-content">
                 <div layout>
                     <md-list flex>
-                        <md-subheader class="md-no-sticky">Users<span class="pull-right">Admin</span></md-subheader>
-                        <md-list-item ng-repeat="u in boardUserRole" class="noright">
+                        <md-subheader class="md-no-sticky">
+                            Users
+                        </md-subheader>
+                        <md-list-item ng-repeat="u in boardUserRole" class="noright" ng-click="">
                             <img alt="{{ u.user.firstName }} {{ u.user.lastName }}" ng-src="{{ u.user.imageUrl }}" class="md-avatar" />
                             <p>{{ u.user.firstName }} {{ u.user.lastName }}</p>
                             <md-checkbox class="md-secondary" ng-change="roleChanged(u)" ng-model="u.isAdmin"></md-checkbox>
+
+                            <md-icon class="md-secondary" ng-click="removeUser(u)">close</md-icon>
                         </md-list-item>
                     </md-list>
                 </div>

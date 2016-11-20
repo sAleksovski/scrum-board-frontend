@@ -63,6 +63,10 @@ body {
     margin: 0 !important;
 }
 
+.m5 {
+    margin: 5px !important;
+}
+
 .mb10 {
     margin-bottom: 10px !important;
 }
@@ -220,10 +224,6 @@ a {
     min-width: 500px;
 }
 
-.add-modal-dialog md-input-container {
-    margin: 0;
-}
-
 .task-priority {
     height: 10px;
     width: 30px;
@@ -251,8 +251,8 @@ a {
 
 .task-icons-container {
     position: absolute;
-    bottom: 6px;
-    right: 14px;
+    bottom: -4px;
+    right: 8px;
 }
 
 .task-icons-container span {
@@ -269,8 +269,8 @@ a {
     min-height: 0;
 }
 
-.task-comments-list .md-avatar {
-    margin-top: 0 !important;
+.task-comments-new-comment {
+    margin-top: 50px;
 }
 
 .social,

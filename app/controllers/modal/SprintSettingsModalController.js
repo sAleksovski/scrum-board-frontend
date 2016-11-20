@@ -5,7 +5,6 @@
 
     app.controller('SprintSettingsModalController', function ($scope, $mdDialog, $http, $q, BoardService, slug) {
 
-        $scope.sprint = {};
         $scope.idsToIgnore = [];
 
         $scope.hide = function () {
@@ -31,6 +30,12 @@
                 });
             }
         };
+
+        $scope.removeUser = function (user) {
+            BoardService.deleteUser(slug, user.id).then(function() {
+                init();
+            });
+        }
 
         $scope.querySearch = function (query) {
             var deferred = $q.defer();
