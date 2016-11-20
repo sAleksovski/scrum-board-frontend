@@ -32,11 +32,12 @@
             }
             if (event.keyCode == 13) {
                 $scope.showForm = false;
-                addBoard();
+                $scope.addBoard();
             }
         };
 
-        function addBoard() {
+        $scope.addBoard = function() {
+            $scope.showForm = false;
             BoardService.addBoard($scope.data.name).then(function (response) {
                 $scope.boards.push(response.data);
                 $scope.data.name = '';
