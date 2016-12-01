@@ -75,6 +75,10 @@ body {
     margin-bottom: 30px !important;
 }
 
+.p10 {
+    padding: 10px !important;
+}
+
 .pull-right {
     float: right;
 }
@@ -228,7 +232,7 @@ a {
     height: 10px;
     width: 30px;
     position: absolute;
-    right: 14px;
+    right: 6px;
     top: 6px;
     border-radius: 3px;
 }

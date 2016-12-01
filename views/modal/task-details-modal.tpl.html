@@ -10,8 +10,8 @@
                         <md-icon>close</md-icon>
                     </md-button>
                 </div>
-                <div flex=66 layout="column">
-                    <md-input-container md-no-float>
+                <div flex=66 layout="column" class="p10">
+                    <md-input-container md-no-float class="m0">
                         <label>Description</label>
                         <textarea ng-model="task.description"></textarea>
                     </md-input-container>
@@ -33,7 +33,27 @@
                         <textarea ng-model="comment" flex enter-submit="insertComment()"></textarea>
                     </md-input-container>
                 </div>
-                <div flex=33 layout="column">
+                <div flex=33 layout="column" class="p10">
+                    <div layout>
+                        <md-autocomplete flex
+                                md-selected-item="task.assignedTo"
+                                md-search-text="searchText"
+                                md-items="item in querySearch(searchText)"
+                                md-item-text="item.firstName + ' ' + item.lastName"
+                                md-min-length="0"
+                                placeholder="Assigned to"
+                                md-floating-label="Assigned to">
+                            <md-item-template>
+                                <div layout="row" layout-align="center">
+                                    <img ng-src="{{item.imageUrl}}" class="autocomplete-user-image" />
+                                    <span md-highlight-text="searchText" flex md-highlight-flags="^i">{{item.firstName + ' ' + item.lastName}}</span>
+                                </div>
+                            </md-item-template>
+                            <md-not-found>
+                                No users matching "{{searchText}}" were found.
+                            </md-not-found>
+                        </md-autocomplete>
+                    </div>
                     <md-input-container class="mb30">
                         <label>Task difficulty</label>
                         <md-select ng-model="task.difficulty" ng-change="save()">
