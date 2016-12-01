@@ -1,7 +1,7 @@
 <md-dialog class="add-modal-dialog">
     <form>
         <md-dialog-content>
-            <div style="width: 800px;"></div>
+            <div style="width: 900px;"></div>
             <div class="md-dialog-content" layout layout-wrap>
                 <div flex="100" layout class="mb10">
                     <span class="md-title m0" flex="60">{{ task.name }}</span>
@@ -34,15 +34,15 @@
                     </md-input-container>
                 </div>
                 <div flex=33 layout="column" class="p10">
-                    <div layout>
+                    <div class="mb30">
+                        <label class="task-assigned-to-label">Assigned to</label>
                         <md-autocomplete flex
                                 md-selected-item="task.assignedTo"
                                 md-search-text="searchText"
                                 md-items="item in querySearch(searchText)"
                                 md-item-text="item.firstName + ' ' + item.lastName"
                                 md-min-length="0"
-                                placeholder="Assigned to"
-                                md-floating-label="Assigned to">
+                                placeholder="Search users">
                             <md-item-template>
                                 <div layout="row" layout-align="center">
                                     <img ng-src="{{item.imageUrl}}" class="autocomplete-user-image" />

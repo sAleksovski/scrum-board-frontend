@@ -277,6 +277,16 @@ a {
     margin-top: 50px;
 }
 
+.task-assigned-to-label {
+    color: rgba(0,0,0,0.54);
+    font-size: 12px;
+    padding-left: 3px;
+    padding-right: 0;
+    margin-bottom: 6px;
+    z-index: 1;
+    right: auto;
+}
+
 .social,
 .social md-icon {
     color: #fff !important;
