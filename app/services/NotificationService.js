@@ -47,7 +47,7 @@
             }
             if (notif.notificationType == 'COMMENTED_ON_TASK') {
                 return notif.creators[0].firstName + ' ' + notif.creators[0].lastName
-                    + (notif.creators.length > 0 ? ' and ' + (notif.creators.length - 1) + ' more' : '')
+                    + (notif.creators.length > 1 ? ' and ' + (notif.creators.length - 1) + ' more' : '')
                     + ' commented on a task ' + notif.task.name;
             }
             if (notif.notificationType == 'CREATED_SPRINT') {
