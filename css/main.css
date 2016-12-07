@@ -75,6 +75,10 @@ body {
     margin-bottom: 30px !important;
 }
 
+.mb50 {
+    margin-bottom: 50px !important;
+}
+
 .p10 {
     padding: 10px !important;
 }
@@ -84,9 +88,50 @@ body {
 }
 
 /**
+ * Landing page
+ */
+.landing-page-background {
+    background-image: url('../images/landing-page-background.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.landing-page-content {
+    text-align: center;
+}
+
+.landing-page-content h1 {
+    text-transform: uppercase;
+    font-weight: 300;
+    font-style: normal;
+    font-family: 'Roboto', sans-serif;
+    color: #555;
+    font-size: 63px;
+    line-height: 1;
+    letter-spacing: 0px;
+}
+
+.landing-page-content h2 {
+    font-weight: 400;
+    font-style: normal;
+    font-family: 'Open Sans', sans-serif;
+    color: #555;
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: 0px;
+}
+
+.landing-page-content h2 {
+    font-weight: 500;
+    font-style: normal;
+    font-family: 'Open Sans', sans-serif;
+    color: #555;
+}
+
+/**
  * Navbar
  */
-
 .navbar-scrum {
     min-height: 0;
 }
@@ -255,7 +300,7 @@ a {
 
 .task-icons-container {
     position: absolute;
-    bottom: -4px;
+    bottom: 4px;
     right: 8px;
 }
 
@@ -267,6 +312,8 @@ a {
     font-size: 16px !important;
     height: 16px;
     width: 16px;
+    min-height: 16px;
+    min-width: 16px;
 }
 
 .task-comments-list .md-3-line {

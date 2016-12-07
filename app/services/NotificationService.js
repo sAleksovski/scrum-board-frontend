@@ -15,8 +15,8 @@
         return service;
 
         function getNotifications(page, size) {
-            page = page | 0;
-            size = size | 10;
+            page = page || 0;
+            size = size || 10;
             return $http.get('/api/notifications?page=' + page + '&size=' + size);
         }
 
